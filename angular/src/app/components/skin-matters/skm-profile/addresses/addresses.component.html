@@ -1,0 +1,47 @@
+<form>
+    <div class="tab-content">
+        <div class="tab-pane fade show active">
+            <h2 class="card-title">
+                Billing Address
+            </h2>
+            <div class="form-label-group">
+                <label for="inputAddressLine1">Address Line 1</label>
+                <input name="address_line1"  type="text" id="inputAddressLine1" class="form-control" [(ngModel)]="address.address_line1" placeholder="Address line 1" required autofocus [readonly]="!edit_mode">
+            </div>
+            <div class="form-label-group">
+                <label for="inputAddressLine2">Address line 2(optional)</label>
+                <input name="address_line2" type="text" id="inputAddressLine2" class="form-control" [(ngModel)]="address.address_line2" placeholder="Address line 2 (optional)" autofocus [readonly]="!edit_mode">
+            </div>
+            <div class="form-label-group">
+                <label for="inputAddressLine1">Country</label>
+                <input name="country"  type="text" id="inputCountry" class="form-control" [(ngModel)]="address.country" placeholder="Country" required readonly>
+            </div>
+            <div class="form-label-group">
+                <label for="inputCity">City</label>
+                <select name="city" id="city" class="form-control" [(ngModel)]="address.city" [disabled]="!edit_mode">
+                    <option value ="" selected disabled>{{address.city}}</option>
+                    <option *ngFor="let city of cities">{{city.name}}</option>
+                </select> 
+            </div>
+            <div class="form-label-group">
+                <label for="inputState">Province</label>
+                <select name="state" id="state" class="form-control" [(ngModel)]="address.state" [disabled]="!edit_mode">
+                    <option value ="" selected disabled>{{address.state}}</option>
+                    <option *ngFor="let state of states">{{state.name}}</option>
+                </select>
+            </div>
+            <div class="form-label-group">
+                <label for="inputZipcode">Zip Code</label>
+                <input name="zip_code"  type="text" id="inputZipcode" class="form-control" [(ngModel)]="address.zip_code" placeholder="Zipcode" required autofocus [readonly]="!edit_mode">
+            </div>
+        </div>
+    </div>
+    <div class="card-footer" style="margin-top:15px;background:none">
+        <div class="col-lg-12">
+            <div class="form-group float-right">
+                <button type="submit" class="btn btn-primary" *ngIf="!edit_mode" (click)="edit_mode=true">Edit</button>
+                <button type="submit" class="btn btn-primary" *ngIf="edit_mode" (click)="edit_mode=false;saveAddress()">Save</button>
+            </div>
+        </div>
+    </div>
+</form>

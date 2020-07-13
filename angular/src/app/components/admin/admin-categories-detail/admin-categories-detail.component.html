@@ -1,0 +1,49 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
+    <h2>Categories</h2>
+</div>
+<nav aria-label="breadcrumb" class="border-bottom mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/admin/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a routerLink="/admin/categories">Categories</a></li>
+        <li class="breadcrumb-item active">Details</li>
+    </ol>
+</nav>
+<form [formGroup]="category_form" (ngSubmit)="save()">
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <div class="form-label-group">
+                <input type="text" class="form-control" [ngClass]="{'is-invalid' : category_form_errors?.name}" formControlName="name" id="name" placeholder="Category Name" required>
+              
+                <label for="name">Category Name</label>
+                <div class="invalid-feedback">
+                    <p *ngFor="let error of category_form_errors?.name">{{error}}</p>
+                </div>
+            </div>
+            <div class="form-label-group">
+                
+                <input type="text" class="form-control" [ngClass]="{'is-invalid' : category_form_errors?.slug}" formControlName="slug" id="product_slug" placeholder="product-slug">
+                <label for="product_slug">Slug (Optional)</label>
+                <div class="invalid-feedback">
+                    <p *ngFor="let error of category_form_errors?.slug">{{error}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <div class="form-label-group">
+                <textarea type="text" class="form-control" [ngClass]="{'is-invalid' : category_form_errors?.description}" formControlName="description" id="product_description" rows="4"></textarea>
+                <label for="product_description">Description (Optional)</label>
+                
+                <div class="invalid-feedback">
+                    <p *ngFor="let error of category_form_errors?.description">{{error}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-lg-12">
+            <button type="submit" class="btn btn-primary float-right">Save</button>
+            <button type="submit" class="btn btn-warning float-right" style="margin-right:15px;" *ngIf="category_data.active" (click)="changeStatus(category_data.id)">Deactivate</button>
+            <button type="submit" class="btn btn-warning float-right" style="margin-right:15px;" *ngIf="!category_data.active" (click)="changeStatus(category_data.id)">Activate</button>
+        
+        </div>
+    </div>
+</form>
+

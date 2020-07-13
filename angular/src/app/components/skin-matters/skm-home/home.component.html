@@ -1,0 +1,90 @@
+<div>
+    <video class="cover-video" autoplay loop>
+        <source src="{{videoSource}}" type="video/mp4">
+    </video>
+</div>
+
+<!-- <div style="margin-top: 3rem;">
+    <h2 class="featured-title">Become a Distributor or Reseller</h2>
+    <hr>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="assets/skin_matters_assets/post.jpg" class="img-fluid">
+            </div>
+            <div class="col-md-6">
+                <img src="assets/skin_matters_assets/post-2.jpg" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<div class="container">
+    <div class="featured-list">
+        <h2 class="featured-title">Our Products</h2>
+        <hr>
+        <div class="featured-container">
+            <a class="prev" (click)="scrollLeft()">❮</a>
+            <a class="next" (click)="scrollRight()">❯</a>
+            <div #featured_products  class="row product-list">
+                <div class="col-md-4 col-lg-3" style="margin-top: 1rem;" *ngFor="let product of products">
+                    <a class="product" routerLink="/product/{{product.slug}}">
+                        <div class="card">
+                            <div class="product-details">
+                                <img *ngIf="product?.images?.length" src="{{product.images[0].url}}" style="width:100%">
+                                <img *ngIf="!product.images?.length" src="assets/skin_matters_assets/logo_bg.jpg" style="width:100%">
+                                <div class="card-body" style="color: black;text-decoration: none;">
+                                    <span class="product-name">
+                                        {{product.product_name}}
+                                    </span><br>
+                                    <span class="price">
+                                        {{product.price | currency : 'PHP' : 'symbol-narrow'}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="add_to_cart_container">
+                                <a type="button" routerLink="/product/{{product.slug}}"
+                                    class="add_to_cart_btn">ORDER NOW</a>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <carousel [isAnimated]="true" [noPause]="false">
+        <slide>
+            <img src="assets/skin_matters_assets/soap-1.jpg" style="display: block; width: 100%;">
+        </slide>
+        <slide>
+            <img src="assets/skin_matters_assets/soap-2.jpg" style="display: block; width: 100%;">
+        </slide>
+        <slide>
+            <img src="assets/skin_matters_assets/soap-3.jpg" style="display: block; width: 100%;">
+        </slide>
+        <slide>
+            <img src="assets/skin_matters_assets/soap-4.jpg" style="display: block; width: 100%;">
+        </slide>
+        <slide>
+            <img src="assets/skin_matters_assets/soap-5.jpg" style="display: block; width: 100%;">
+        </slide>
+        <slide>
+            <img src="assets/skin_matters_assets/soap-6.jpg" style="display: block; width: 100%;">
+        </slide>
+        <slide>
+            <img src="assets/skin_matters_assets/soap-7.jpg" style="display: block; width: 100%;">
+        </slide>
+        <slide>
+            <img src="assets/skin_matters_assets/soap-8.jpg" style="display: block; width: 100%;">
+        </slide>
+        <slide>
+            <img src="assets/skin_matters_assets/soap-9.jpg" style="display: block; width: 100%;">
+        </slide>
+        <slide>
+            <img src="assets/skin_matters_assets/soap-10.jpg" style="display: block; width: 100%;">
+        </slide>
+    </carousel>
+</div>

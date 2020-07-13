@@ -1,0 +1,85 @@
+<nav class="breadcrumb skin-matters-background-color" style="padding: 0;font-size: 14px;">
+    <div class="container">
+        <ol class="breadcrumb" style="background-color: transparent;padding: 0;">
+            <li class="breadcrumb-item"><a style="color:#4a4a4a" href="/">Home</a></li>
+            <li class="breadcrumb-item"><a style="color:#4a4a4a" href="/products">Products</a></li>
+            <li class="breadcrumb-item" style="color: white;" aria-current="page">{{product?.product_name}}</li>
+        </ol>
+    </div>
+</nav>
+    
+<div class="container" style="margin-top: 2rem;">
+    <div class="row">
+        <div class="col-lg-5">
+            <lib-ngx-image-zoom
+                [thumbImage]="zoomImage"
+                [fullImage]="zoomImage"
+                [magnification]="magnification"
+                [zoomMode]="zoomMode"
+            ></lib-ngx-image-zoom>
+        </div>
+
+        <div class="col-lg-6">
+            <h1 class="product-title">{{product?.product_name}}</h1>
+            <h3 class="product-price">{{product?.price | currency : 'PHP' : 'symbol-narrow'}}</h3>
+            <h3 class="stock">
+                <span *ngIf="product?.stock_management && product?.stock > 0">Stock: {{product?.stock}}</span>
+                <span *ngIf="!product?.stock_management && product?.stock_status == 'instock'">IN STOCK</span>
+                <span *ngIf="(!product?.stock_management && product?.stock_status == 'outofstock') || (product?.stock_management && product?.stock <= 0 && product?.stock_status != 'reservation')">
+                    OUT OF STOCK
+                </span>
+                <span *ngIf="(!product?.stock_management && product?.stock_status == 'reservation') || (product?.stock_management && product?.stock <= 0 && product?.stock_status == 'reservation')">
+                    FOR RESERVATION
+                </span>
+            </h3>
+            <div class="row">
+                <div *ngIf="orderNowVisible" class="col-xl-4 col-lg-4 col-md-3" style="padding-bottom:0.5rem;">
+                    <div class="input-group" style="height:100%">
+                        <div class="row" style="margin:0; width:100%;">
+                            <div class="input-group-btn col-3" style="padding:0;">
+                                <button class="btn" type="button" (click)="deductQty()" style="height:100%;width: 100%;">-</button>
+                            </div>
+    
+                            <div class="col-6" style="padding:0;">
+                                <input [(ngModel)]="quantity" type="text" class="text-center" maxlength="3" readonly style="background: #EFEFEF; border:none; height: 100%; width: 100%;">
+                            </div>
+                            
+                            <div class="input-group-btn col-3" style="padding:0;">
+                                <button class="btn" type="button" (click)="addQty()" style="height:100%;width: 100%;">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-lg-5 col-md-3" style="padding-bottom:0.5rem;">
+                    <button class="order-now-btn" (click)="orderNow()" [disabled]="!canOrder">ORDER NOW</button>
+                </div>
+            </div>
+            <div *ngIf="product?.category" class="product-categories">
+                <span>Category: </span>
+                <a style="color: #f48373; margin-left: 5px;" [routerLink]="['/products', product.category.slug]">
+                    {{product.category.name}}
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="image-gallery-container" *ngIf="product?.images.length > 1">
+        <a class="prev" (click)="scrollLeft()">❮</a>
+        <a class="next" (click)="scrollRight()">❯</a>
+        <div #image_gallery class="image-gallery">
+            <ul>
+                <li class="image-li" *ngFor="let image of product?.images; let i = index">
+                    <a style="cursor: pointer;" (click)="changeZoomImage(i)"><img class="img-thumbnail" src="{{image.url}}"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="product-other-details">
+        <div class="tab" [hidden]="!product?.description">
+            <button id="description-tab" class="tablinks" (click)="openTab('description')">DESCRIPTION</button>
+        </div>
+          
+        <div [hidden]="!product?.description" id="description" class="tabcontent product-description">
+            <p>{{product?.description}}</p>
+        </div>
+    </div>
+</div>

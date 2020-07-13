@@ -1,0 +1,51 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
+  <h2>Distributors</h2>
+</div>
+<nav aria-label="breadcrumb" class="border-bottom mb-3">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink="/admin/dashboard">Home</a></li>
+    <li class="breadcrumb-item active">Distributors</li>
+  </ol>
+</nav>
+<div class="table-responsive">
+  <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table row-border hover">
+    <thead class="thead-dark">
+      <tr>
+        <th>ID</th>
+        <th>First name</th>
+        <th>Last name</th>
+        <th>Contact Number</th>
+        <th>Applied for</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of distributor">
+        <td>
+          {{item.distributors[0].id}}
+        </td>
+        <td>
+          {{item.first_name}} {{item.last_name}}
+        </td>
+        <td>
+          {{item.email}}
+        </td>
+        <td>
+          {{item.distributors[0].contact_number}}
+        </td> 
+        <td>
+          {{item.distributors[0].ranks[0]?item.distributors[0].ranks[0].title:''}}
+        </td> 
+        <td>
+         
+          <button class="btn btn-sm btn-primary" routerLink="/admin/distributors/{{item.distributors[0].id}}">
+            view
+          </button>
+          <button class="btn btn-sm btn-danger"  style="margin-left:5px" (click)="decline(item.distributors[0])">
+              delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,57 @@
+<nav class="breadcrumb skin-matters-background-color" style="padding: 0;font-size: 14px;">
+    <div class="container">
+        <ol class="breadcrumb" style="background-color: transparent;padding: 0;">
+            <li class="breadcrumb-item"><a style="color:#4a4a4a" href="/">Home</a></li>
+            <li class="breadcrumb-item" style="color: white;" aria-current="page">Rewards</li>
+        </ol>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <div style="padding: 1rem; text-align: center;">
+                        <label for="sort" class="form-label" style="margin-right: 0.5rem;">Sort By: </label>
+                        <select [(ngModel)]="sorting_filter" (change)="getRewards()" class="form-control" style="width: fit-content; display: inline; padding: 0 0.5rem 0 0.5rem; font-size: 14px;">
+                            <option value="">Default Sorting</option>
+                            <option value="latest">Sort Latest</option>
+                            <option value="low_to_high">Sort By Price: Low to High</option>
+                            <option value="high_to_low">Sort By Price: High to Low</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div style="padding: 1.5rem; text-align: center;">
+                        <p *ngIf="!rewards?.length" style="vertical-align: middle; margin: 0">No results found</p>
+                        <p *ngIf="rewards?.length" style="vertical-align: middle; margin: 0">Showing {{((page*per_page)-(per_page-1)) + '-' + (((page*per_page)-(per_page))+rewards.length)}} of {{total_rewards}} results</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row reward-list">
+                <div class="col-md-4" style="margin-top: 2rem;" *ngFor="let reward of rewards">
+                    <a class="reward" routerLink="/reward/{{reward.slug}}">
+                        <div class="card">
+                            <div class="reward-details">
+                                <img *ngIf="reward.images[0]" src="{{reward.images[0].url}}" style="width:100%">
+                                <img *ngIf="!reward.images[0]" src="assets/skin_matters_assets/logo_bg.jpg" style="width:100%">
+                                <div class="card-body" style="color: black;text-decoration: none;">
+                                    <span class="reward-name">
+                                        {{reward.name}}
+                                    </span><br>
+                                    <span class="price">
+                                        {{reward.price}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="pagination-container" *ngIf="total_rewards > rewards?.length">
+                <pagination [totalItems]="total_rewards" [itemsPerPage]="per_page" [(ngModel)]="page" [maxSize]="5" (pageChanged)="pageChanged($event)"></pagination>
+            </div>
+        </div>
+    </div>
+</div>

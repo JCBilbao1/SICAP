@@ -1,0 +1,33 @@
+<h3 style="text-align: center;">Your Orders</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Order #</th>
+            <th scope="col">Date</th>
+            <th scope="col">Total</th>
+            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let order of orders">
+            <th>
+                {{ order?.id }}
+            </th>
+            <td>
+                {{ order?.created_at | date }}
+            </td>
+            <td>
+                {{ order?.total_price | currency : 'PHP' : 'symbol-narrow' }}
+            </td>
+            <td>
+                {{order?.order_status[0].name}}
+            </td>
+            <td>
+                <a routerLink="/profile/orders/{{order?.id}}">
+                    View
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>

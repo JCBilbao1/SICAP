@@ -1,0 +1,122 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
+    <h2>Orders</h2>
+</div>
+<nav aria-label="breadcrumb" class="border-bottom mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/admin/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a routerLink="/admin/orders">Orders</a></li>
+        <li class="breadcrumb-item active">Details</li>
+    </ol>
+</nav>
+<div class="row">
+    <div class="col-lg-6 pt-2">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">
+                    Distributor Details
+                </h3>
+                <hr>
+                
+                <div class="form-label-group">
+                    <input name="first_name" type="text" id="inputFirstName" class="form-control" value="{{order_details?.distributors.users[0].first_name}} {{order_details?.distributors.users[0].last_name}}"  placeholder="Full name" required autofocus disabled>
+                    <label for="inputFirstName">Name</label>
+                </div>
+                <div class="form-label-group">
+                    <input type="email" name="email"  id="inputEmail" class="form-control" value="{{order_details?.distributors.users[0].email}}"  placeholder="Email address" required autofocus disabled>
+                    <label for="inputEmail">Email</label>
+                </div>
+                <div class="form-label-group">
+                    <input name="contact_number"  type="text" id="inputContactNumber" class="form-control" value="{{order_details?.distributors.contact_number}}"  placeholder="Contact number" minlength="11" maxlength="11"  required autofocus disabled>
+                    <label for="inputContactNumber">Contact number</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6 pt-2">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">
+                    Shipping Details
+                </h3>
+                <hr>
+                
+                <div class="form-label-group">
+                    <input name="address_line1"  type="text" id="inputAddressLine1" class="form-control" value="{{order_details?.distributors.address[0].address_line1}}"placeholder="Address line 1" required autofocus disabled>
+                    <label for="inputAddressLine1">Address Line 1</label>
+                </div>
+                <div class="form-label-group">
+                    <input name="address_line2" type="text" id="inputAddressLine2" class="form-control" value="{{order_details?.distributors.address[0].address_line2}}" placeholder="Address line 2 (optional)" autofocus disabled>
+                    <label for="inputAddressLine2">Address line 2(optional)</label>
+                </div>
+                <div class="form-label-group">
+                    <input name="city"  type="text" id="city" class="form-control" value="{{order_details?.distributors.address[0].city}}"placeholder="City" required autofocus disabled>
+                    <label for="inputCity">City</label>
+                </div>
+                <div class="form-label-group">
+                    <input name="state" type="text" id="state" class="form-control" value="{{order_details?.distributors.address[0].state}}" placeholder="State" autofocus disabled>
+                    <label for="inputState">State</label>
+                </div>
+                <div class="form-label-group">
+                    <input name="zip_code"  type="text" id="inputZipcode" class="form-control" value="{{order_details?.distributors.address[0].zip_code}}"  placeholder="Zipcode" required autofocus disabled>
+                    <label for="inputZipcode">Zip Code</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row pt-2" >
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">
+                    Order Details
+                </h3>
+                <hr>
+                <div class="order-header">
+                    <h5>
+                        Order Status: {{order_details?.order_status.name}}
+                    </h5>
+                    <h5>
+                        Total Price: {{order_details?.total_price}}
+                    </h5>
+                </div>
+                <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table row-border hover">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th>Product</th>
+                        <th>SRP</th>
+                        <th>Quantity</th>
+                        <th>Total Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of order_details?.order_details">
+                        <td>
+                            {{item.product.product_name}}
+                        </td>
+                        <td>
+                            {{item.srp}}
+                        </td>
+                        <td>
+                            {{item.quantity}}
+                        </td>
+                        <td>
+                            {{item.total}}
+                        </td>
+                      </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-12 mt-2 border-top">
+    <div class="form-group float-right pt-2">
+        <button type="button" class="btn btn-danger" style="margin-right:15px;" *ngIf="order_details?.order_status.slug == 'confirmed'||order_details?.order_status.slug == 'created'||order_details?.order_status.slug == 'on-process'" (click)="cancel()">Cancel Order</button>
+        <button type="button" class="btn btn-primary" *ngIf="order_details?.order_status.slug == 'reserved'" (click)="accept_order()">Accept Order</button>
+        <button type="button" class="btn btn-primary" *ngIf="order_details?.order_status.slug == 'created'" (click)="confirm_payment()">Confirm Payment</button>
+        <button type="button" class="btn btn-primary" *ngIf="order_details?.order_status.slug == 'confirmed'" (click)="deliver_order()">Deliver Order</button>
+        <button type="button" class="btn btn-primary" *ngIf="order_details?.order_status.slug == 'on-process'" (click)="confirm_delivery()">Confirm Delivery</button>
+    </div>
+</div>

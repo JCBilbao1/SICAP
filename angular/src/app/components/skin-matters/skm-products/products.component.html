@@ -1,0 +1,95 @@
+<nav class="breadcrumb skin-matters-background-color" style="padding: 0;font-size: 14px;">
+    <div class="container">
+        <ol class="breadcrumb" style="background-color: transparent;padding: 0;">
+            <li class="breadcrumb-item"><a style="color:#4a4a4a" href="/">Home</a></li>
+            <li *ngIf="!category_filter.name" class="breadcrumb-item" style="color: white;" aria-current="page">Products</li>
+            <li *ngIf="category_filter.name" class="breadcrumb-item"><a style="color:#4a4a4a" href="/products">Products</a></li>
+            <li *ngIf="category_filter.name" class="breadcrumb-item" style="color: white;" aria-current="page">{{category_filter.name}}</li>
+        </ol>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3 d-none d-lg-flex" style="border: 1px solid #e4e4e4;">
+            <div class="single category">
+                <h4 class="side-title">Product categories</h4>
+                <ul class="list-unstyled">
+                    <li *ngFor="let category of categories | keyvalue">
+                        <a *ngIf="category.value.slug != category_filter.slug" [routerLink]="['/products', category.value.slug]">
+                            {{category.value.name}} <span class="pull-right">{{category.value.products_count}}</span>
+                        </a>
+                        <a *ngIf="category.value.slug === category_filter.slug" routerLink="/products" [ngClass]="{'active' : category.value.slug === category_filter.slug}">
+                            {{category.value.name}} <span class="pull-right">{{category.value.products_count}}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-9">
+            <div class="row">
+                <div class="col-md-6">
+                    <div style="padding: 1rem; text-align: center;">
+                        <label for="sort" class="form-label" style="margin-right: 0.5rem;">Sort By: </label>
+                        <select [(ngModel)]="sorting_filter" (change)="getProducts()" class="form-control" style="width: fit-content; display: inline; padding: 0 0.5rem 0 0.5rem; font-size: 14px;">
+                            <option value="">Default Sorting</option>
+                            <option value="latest">Sort Latest</option>
+                            <option value="low_to_high">Sort By Price: Low to High</option>
+                            <option value="high_to_low">Sort By Price: High to Low</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div style="padding: 1.5rem; text-align: center;">
+                        <p *ngIf="!products?.length" style="vertical-align: middle; margin: 0">No results found</p>
+                        <p *ngIf="products?.length" style="vertical-align: middle; margin: 0">Showing {{((page*per_page)-(per_page-1)) + '-' + (((page*per_page)-(per_page))+products.length)}} of {{total_products}} results</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row product-list">
+                <div class="col-md-4" style="margin-top: 2rem;" *ngFor="let product of products">
+                    <a class="product" routerLink="/product/{{product.slug}}">
+                        <div class="card">
+                            <div class="product-details">
+                                <img *ngIf="product.images[0]" src="{{product.images[0].url}}" style="width:100%">
+                                <img *ngIf="!product.images[0]" src="assets/skin_matters_assets/logo_bg.jpg" style="width:100%">
+                                <div class="card-body" style="color: black;text-decoration: none;">
+                                    <span class="product-name">
+                                        {{product.product_name}}
+                                    </span><br>
+                                    <span class="price">
+                                        {{product.price | currency : 'PHP' : 'symbol-narrow'}}
+                                    </span>
+                                </div>
+                            </div>
+                            <!-- <div class="add_to_cart_container">
+                                <a type="button" routerLink="/product/{{product.slug}}"
+                                    class="add_to_cart_btn">ORDER NOW</a>
+                            </div> -->
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="pagination-container" *ngIf="total_products > products?.length">
+                <pagination [totalItems]="total_products" [itemsPerPage]="per_page" [(ngModel)]="page" [maxSize]="5" (pageChanged)="pageChanged($event)"></pagination>
+            </div>
+        </div>
+
+        <div class="col-lg-3 d-flex d-lg-none" style="border: 1px solid #e4e4e4;">
+            <div class="single category">
+                <h4 class="side-title">Product categories</h4>
+                <ul class="list-unstyled">
+                    <li *ngFor="let category of categories | keyvalue">
+                        <a *ngIf="category.value.slug != category_filter.slug" [routerLink]="['/products', category.value.slug]">
+                            {{category.value.name}} <span class="pull-right">{{category.value.products_count}}</span>
+                        </a>
+                        <a *ngIf="category.value.slug === category_filter.slug" routerLink="/products" [ngClass]="{'active' : category.value.slug === category_filter.slug}">
+                            {{category.value.name}} <span class="pull-right">{{category.value.products_count}}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

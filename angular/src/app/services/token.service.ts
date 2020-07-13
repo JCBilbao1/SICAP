@@ -1,0 +1,63 @@
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class TokenService {
+
+  constructor() { }
+  private baseUrl = location.protocol + '//' + location.hostname + ':8000/api'; //url for local or with port
+  
+  private iss = {
+    login: this.baseUrl+'/auth/login',
+    signup: this.baseUrl+'/auth/signup',
+  };
+  handle(token){
+    this.set(token);
+    console.log(this.isValid());
+  }
+
+  set(token){
+    localStorage.setItem('token', token);
+  }
+
+  getHeaders(){
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/x.laravel.v1+json',
+      'Authorization' : 'Bearer' + localStorage.getItem('token')
+    };
+    return headers;
+  }
+  get(){
+    return localStorage.getItem('token');
+  }
+
+  remove(){
+    localStorage.removeItem('token');
+  }
+
+  isValid(){
+
+    const token = this.get();
+    if(token){
+      const payload = this.payload(token);
+      if(payload){
+        return Object.values(this.iss).indexOf(payload.iss) > -1 ? true: false;
+      }
+    }
+  }
+
+  payload(token){
+    const payload = token.split('.')[1];
+    return this.decode(payload);
+  }
+
+  decode(payload){
+    return JSON.parse(atob(payload));
+  }
+
+  loggedIn(){
+    return this.isValid();
+  }
+}

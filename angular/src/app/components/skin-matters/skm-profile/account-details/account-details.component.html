@@ -1,0 +1,113 @@
+<div class="row">
+    <div class="col-xl-9" style="margin: auto;">
+        <div *ngIf="!edit_mode" id="distributor-id" class="distributor-id">
+            <div class="distributor-profile-pic">
+                <div class="distributor-profile-pic-container">
+                    <img *ngIf="user?.image" class="img-fluid" src="{{user.image}}">
+                    <img *ngIf="!user?.image" class="img-fluid" src="assets/skin_matters_assets/distributor-profile.jpg">
+                </div>
+            </div>
+            <img class="distributor-id-background" src="assets/skin_matters_assets/distributor-id-background.png">
+
+            <div class="distributor-type">
+                {{distributor?.rank?.title | uppercase}}
+            </div>
+
+            <div class="distributor-contact">
+                {{distributor?.contact_number}}
+            </div>
+
+            <div class="distributor-code">
+                {{distributor?.distributor_code}}
+            </div>
+
+            <div class="distributor-location">
+                {{distributor_address?.state | uppercase}}<br>
+                PHILIPPINES
+            </div>
+
+            <div class="distributor-instagram">
+                {{(distributor?.instagram_name && (distributor?.instagram_name).charAt(0) != '@') ? '@'+distributor?.instagram_name: distributor?.instagram_name}}
+            </div>
+
+            <div class="distributor-facebook">
+                {{distributor?.facebook_name}}
+            </div>
+
+            <div class="distributor-name-container">
+                <div class="distributor-name">
+                    {{user?.first_name | titlecase}} {{user?.last_name | titlecase}}
+                </div>
+            </div>
+        </div>
+
+        <button class="custom-btn" *ngIf="!edit_mode" (click)="edit_mode = true">Edit Account Details</button>
+
+        <small *ngIf="!edit_mode && !downloadable"><strong>All details are required to for you to download your Distributor ID</strong></small>
+
+        <button class="custom-btn" *ngIf="!edit_mode && downloadable" (click)="saveAsImage()">Download</button>
+
+        <hr>
+
+        <p>You have {{(distributor?.points?.points) ? distributor.points.points : 0}} points</p>
+
+        <div *ngIf="edit_mode">
+            <form>
+                <div class="form-label-group">
+                    <image-cropper
+                        [imageChangedEvent]="imageChangedEvent"
+                        [maintainAspectRatio]="true"
+                        [aspectRatio]="1 / 1"
+                        format="png"
+                        (imageCropped)="imageCropped($event)"
+                        (imageLoaded)="imageLoaded()"
+                        (cropperReady)="cropperReady()"
+                        (loadImageFailed)="loadImageFailed()"
+                    ></image-cropper>
+                    <label for="file-upload">Profile Image</label>
+                    <input id="file-upload" class="form-control" type="file" (change)="fileChangeEvent($event)" />                    
+                </div>
+                <div class="form-label-group">
+                    <label for="inputFirstName">Firstname</label>
+                    <input name="first_name"  type="text" id="inputFirstName" class="form-control" [(ngModel)]="edit_form.first_name" placeholder="First Name" required autofocus>
+                </div>
+                <div class="form-label-group">
+                    <label for="inputLastName">Last Name</label>
+                    <input name="last_name"  type="text" id="inputLastName" class="form-control" [(ngModel)]="edit_form.last_name" placeholder="Last Name" required autofocus>
+                </div>
+                <div class="form-label-group">
+                    <label for="inputContactNumber">Contact Number</label>
+                    <input name="contact_number"  type="text" id="inputContactNumber" class="form-control" [(ngModel)]="edit_form.contact_number" placeholder="Last Name" required autofocus>
+                </div>
+                <div class="form-label-group">
+                    <label for="inputEmailAddress">Email Address</label>
+                    <input name="email_address"  type="text" id="inputEmailAddress" class="form-control" [(ngModel)]="edit_form.email_address" placeholder="Last Name" required autofocus>
+                </div>
+                <div class="form-label-group">
+                    <label for="inputCity">City</label>
+                    <select name="city" id="city" class="form-control" [(ngModel)]="edit_form.city" [disabled]="!edit_mode">
+                        <option *ngFor="let city of cities">{{city.name}}</option>
+                    </select> 
+                </div>
+                <div class="form-label-group">
+                    <label for="inputState">State</label>
+                    <select name="state" id="state" class="form-control" [(ngModel)]="edit_form.state" [disabled]="!edit_mode">
+                        <option *ngFor="let state of states">{{state.name}}</option>
+                    </select>
+                </div>
+                <div class="form-label-group">
+                    <label for="inputFacebook">Facebook Username</label>
+                    <input name="facebook"  type="text" id="inputFacebook" class="form-control" [(ngModel)]="edit_form.facebook_name" placeholder="Facebook Username" required autofocus>
+                </div>
+                <div class="form-label-group">
+                    <label for="inputInstagram">Instagram Username</label>
+                    <input name="instagram"  type="text" id="inputInstagram" class="form-control" [(ngModel)]="edit_form.instagram_name" placeholder="Instagram Username" required autofocus>
+                </div>
+                <div class="form-group float-right">
+                    <button class="custom-btn" *ngIf="edit_mode" (click)="edit_mode = false">Cancel</button>
+                    <button type="submit" class="custom-btn" *ngIf="edit_mode" (click)="edit_mode=false;saveAccountDetails()">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

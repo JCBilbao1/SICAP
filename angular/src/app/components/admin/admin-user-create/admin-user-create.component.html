@@ -1,0 +1,71 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
+    <h2>Users</h2>
+</div>
+<nav aria-label="breadcrumb" class="border-bottom mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/admin/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a routerLink="/admin/users">Users</a></li>
+        <li class="breadcrumb-item active">Create</li>
+    </ol>
+</nav>
+<form [formGroup]="user_form" (ngSubmit)="save()">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-label-group  col-lg-12">
+                            <input type="text" class="form-control" [ngClass]="{'is-invalid' : user_form.first_name}" formControlName="first_name" id="first_name" placeholder="First name" required>
+                            <label for="firstName">First name</label>
+                            <div class="error-feedback">
+                                <p *ngFor="let error of user_form_errors?.first_name">{{error}}</p>
+                            </div>
+                        </div>
+                        <div class="form-label-group  col-lg-12">
+                            <input type="text" class="form-control" [ngClass]="{'is-invalid' : user_form.last_name}" formControlName="last_name" id="last_name" placeholder="Last name" required>
+                            <label for="firstName">Last name</label>
+                            <div class="error-feedback">
+                                <p *ngFor="let error of user_form_errors?.last_name">{{error}}</p>
+                            </div>
+                        </div>
+                        <div class="form-label-group  col-lg-12">
+                            <input type="text" class="form-control" [ngClass]="{'is-invalid' : user_form.email}" formControlName="email" id="email" placeholder="Email" required>
+                            <label for="firstName">Email</label>
+                            <div class="error-feedback">
+                                <p *ngFor="let error of user_form_errors?.email">{{error}}</p>
+                            </div>
+                        </div>
+                        <div class="form-label-group  col-lg-12">
+                            <input type="password" class="form-control" [ngClass]="{'is-invalid' : user_form.password}" formControlName="password" id="password" placeholder="Password" required>
+                            <label for="firstName">Password</label>
+                            <div class="error-feedback">
+                                <p *ngFor="let error of user_form_errors?.password">{{error}}</p>
+                            </div>
+                        </div>
+                        <div class="form-label-group col-lg-12">
+                            
+                            <select name="role" id="role" class="form-control" [ngClass]="{'is-invalid' : user_form.role_name}" formControlName="role_name" id="role" placeholder="Role" required>
+                                <option value ="" selected disabled>Select role</option>
+                                <option *ngFor="let role of roleList">{{role.name}}</option>
+                            </select>
+                            <label for="role">Role</label>
+                            <div class="error-feedback">
+                                <p *ngFor="let error of user_form_errors?.role_name">{{error}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <hr>
+
+                            <div class="form-group float-right" >
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>

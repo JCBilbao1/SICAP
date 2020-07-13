@@ -1,0 +1,16 @@
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+/vendor/*
+/vendor/composer/*
+vendor/composer/autoload_classmap.php
+vendor/composer/autoload_static.php
+.env
+.env.backup
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
