@@ -28,17 +28,6 @@ class SignUpRequest extends FormRequest
             'last_name' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|confirmed',
-            'address_line1' => 'required',
-            'city' => 'required',
-            'contact' => 'required',
-            'state' => 'required',
-            'zip_code' => 'required',
-            'rank' => 'required',
-            'facebook' => 'required',
-            'instagram' => 'required',
-            'facebook_name' => 'required',
-            'instagram_name' => 'required',
-            'referral_code' => 'nullable|exists:distributors,distributor_code',
         ];
     }
 }

@@ -6,7 +6,6 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
@@ -14,7 +13,6 @@ class User extends Authenticatable implements JWTSubject
 {
     use SoftDeletes;
     use Notifiable;
-    use HasRoles;
     /**
      * The attributes that are mass assignable.
      *
@@ -23,7 +21,7 @@ class User extends Authenticatable implements JWTSubject
     protected $guard_name = 'api';
     
     protected $fillable = [
-        'name', 'email', 'password', 'image',
+        'name', 'email', 'password', 'image', 'role_id',
     ];
 
     /**
@@ -59,11 +57,8 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    public function roles(){
-        return $this->belongsToMany('Spatie\Permission\Models\Role','model_has_roles', 'model_id','role_id');
-    }
-    public function distributors(){
-        return $this->belongsToMany('App\Models\Distributor','user_distributor');
+    public function role(){
+        return $this->belongsTo('App\Models\Role');
     }
 
     public function setPasswordAttribute($value){

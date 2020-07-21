@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
-use App\Http\Requests\UserCreationRequest;
-use App\Http\Requests\UserUpdateRequest;
+use App\Models\ProjectStrategy;
 
-class UserController extends Controller
+class ProjectStrategyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +14,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user = User::with('role')->get();
-        return response()->json($user);
+        $project_strategy = ProjectStrategy::all();
+        return response()->json($project_strategy);
     }
 
     /**
@@ -26,14 +24,11 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UserCreationRequest $request)
+    public function store(Request $request)
     {
-        $user = new User;
-        $user->first_name = $request['first_name'];
-        $user->last_name = $request['last_name'];
-        $user->email = $request['email'];
-        $user->password = $request['password'];
-        $user->save();
+        $project_strategy = new ProjectStrategy;
+        $project_strategy->name = $request['name'];
+        $project_strategy->save();
         return response()->json(['status'=>"Success Creation!"]);
     }
 
@@ -45,9 +40,8 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = User::find($id);
-        $user->role = $user->role;
-        return response()->json($user);
+        $project_strategy = ProjectStrategy::find($id);
+        return response()->json($project_strategy);
     }
 
     /**
@@ -57,13 +51,11 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UserUpdateRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        $user = User::find($id);
-        $user->first_name = $request['first_name'];
-        $user->last_name = $request['last_name'];
-        $user->email = $request['email'];
-        $user->save();
+        $project_strategy = ProjectStrategy::find($id);
+        $project_strategy->name = $request['name'];
+        $project_strategy->save();
         return response()->json(['status'=>"Success update!"]);
     }
 
@@ -79,8 +71,8 @@ class UserController extends Controller
     }
 
     public function deleteTemporary($id){
-        $user = User::findorfail($id);
-        $user->delete();
+        $project_strategy = ProjectStrategy::findorfail($id);
+        $project_strategy->delete();
         return response()->json(['message'=>'Successfuly Deleted!']);
     }
 }

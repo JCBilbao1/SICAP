@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { APIService } from 'src/app/services/api.service';
 import { FormBuilder } from '@angular/forms';

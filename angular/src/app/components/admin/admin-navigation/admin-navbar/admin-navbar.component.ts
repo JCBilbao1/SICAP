@@ -23,6 +23,7 @@ export class AdminNavbarComponent implements OnInit {
         error => this.errorResponse(error)
     );
   }
+  
   successResponse(data){
     console.log('auth');
     if(!data.admin){
@@ -43,6 +44,7 @@ export class AdminNavbarComponent implements OnInit {
     this.Token.remove();
     this.router.navigateByUrl('/login');
   }
+  
   ngOnInit(): void {
     this.Auth.authStatus.subscribe(value => this.loggedIn = value);
   }

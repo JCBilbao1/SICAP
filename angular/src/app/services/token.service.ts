@@ -12,6 +12,7 @@ export class TokenService {
     login: this.baseUrl+'/auth/login',
     signup: this.baseUrl+'/auth/signup',
   };
+
   handle(token){
     this.set(token);
     console.log(this.isValid());
@@ -21,14 +22,6 @@ export class TokenService {
     localStorage.setItem('token', token);
   }
 
-  getHeaders(){
-    var headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/x.laravel.v1+json',
-      'Authorization' : 'Bearer' + localStorage.getItem('token')
-    };
-    return headers;
-  }
   get(){
     return localStorage.getItem('token');
   }
@@ -38,7 +31,6 @@ export class TokenService {
   }
 
   isValid(){
-
     const token = this.get();
     if(token){
       const payload = this.payload(token);

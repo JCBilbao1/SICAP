@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
-use Spatie\Permission\Models\Role;
+
 class UserSeeder extends Seeder
 {
     /**
@@ -12,27 +12,14 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
+        User::create([
             'id' => 1,
-            'first_name' => 'Super',
-            'last_name' => 'Admin',
+            'first_name' => 'CDO',
+            'last_name' => 'Coordination',
             'email' => 'admin@example.com',
-            'password' => bcrypt('password'),
-            'created_at'=> Date('Y-m-d H:m:s'),
+            'password' => 'password',
+            'role_id' => 1,
         ]);
-        $user = User::find(1);
-        $user->assignRole('admin');
-        DB::table('users')->insert([
-            'id' => 2,
-            'first_name' => 'Sales',
-            'last_name' => 'Example',
-            'email' => 'sales@example.com',
-            'password' => bcrypt('password'),
-            'created_at'=> Date('Y-m-d H:m:s'),
-        ]);
-        
-        $user = User::find(2);
-        $user->assignRole('sales');
     }
 }
         

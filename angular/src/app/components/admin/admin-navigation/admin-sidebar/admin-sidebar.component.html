@@ -2,57 +2,17 @@
   <div class="sidebar-sticky pt-3">
     <ul class="nav flex-column">
       <li class="nav-item">
-        <a class="nav-link" routerLink="/admin/dashboard" routerLinkActive="active">
+        <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="hasRole == 'admin'">
           <span data-feather="home"></span>
           Dashboard
         </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/admin/distributors" routerLinkActive="active" *ngIf="hasRole == 'admin'">
-          <span data-feather="file"></span>
-          Distributors
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/admin/products" routerLinkActive="active">
-          <span data-feather="shopping-cart"></span>
-          Products
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/admin/categories" routerLinkActive="active">
-          <span data-feather="shopping-cart"></span>
-          Categories
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/admin/orders" routerLinkActive="active">
-          <span data-feather="users"></span>
-          Orders
-        </a>
-      </li>  
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/admin/sales" routerLinkActive="active">
-          <span data-feather="shopping-cart"></span>
-          Sales 
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/admin/rewards" routerLinkActive="active" *ngIf="hasRole == 'admin'">
-          <span data-feather="shopping-cart"></span>
-          Rewards 
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/admin/payments" routerLinkActive="active" *ngIf="hasRole == 'admin'">
-          <span data-feather="shopping-cart"></span>
-          Payments 
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/admin/users" routerLinkActive="active" *ngIf="hasRole == 'admin'">
+        <a class="nav-link" routerLink="/community-development" routerLinkActive="active" *ngIf="hasRole == 'admin'">
           <span data-feather="bar-chart-2"></span>
-          Users
+          JRU - Community Development Program
+        </a>
+        <a class="nav-link" routerLink="/users" routerLinkActive="active" *ngIf="hasRole == 'admin'">
+          <span data-feather="bar-chart-2"></span>
+          Manage Users
         </a>
       </li>
     </ul>

@@ -27,7 +27,7 @@ class UserUpdateRequest extends FormRequest
             'first_name' => 'required',
             'last_name' => 'required',
             'email' => ['required','email',\Illuminate\Validation\Rule::unique('users')->ignore($this->user()->id)],
-            'role_name' => 'required',
+            'password' => 'confirmed',
         ];
     }
 }

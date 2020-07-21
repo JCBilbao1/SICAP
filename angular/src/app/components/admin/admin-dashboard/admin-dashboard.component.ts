@@ -31,12 +31,14 @@ export class AdminDashboardComponent implements OnInit {
       this.dtTrigger.next();
     });
   }
+
   reloadData(){
     this.API.get('distributor/unverified').subscribe(
       data => {this.applyData(data);this.rerender()},
       error => console.log(error)
     );
   }
+
   loadData(){
     this.API.get('distributor/unverified').subscribe(
       data => {this.applyData(data);
@@ -60,6 +62,7 @@ export class AdminDashboardComponent implements OnInit {
     event.preventDefault();
     this.delete(data.id);
   }
+  
   delete(id){
     this.API.delete(`distributor/delete-temporary/${id}}`).subscribe(
       data => this.responseDisapproveUpdate(data),
@@ -73,6 +76,7 @@ export class AdminDashboardComponent implements OnInit {
       error => console.log(error)
     )
   }
+
   view(data){
     this.router.navigateByUrl(`admin/distributors/${data}`);
   }
@@ -93,8 +97,8 @@ export class AdminDashboardComponent implements OnInit {
 
     this.router.navigate([`/admin/dashboard`]);
   }
+
   responseError(error){
-    console.log(error)
     let error_message = ['Kindly screenshot and send this to our support!',('<hr><br>'+ error.message +'<br><hr>'),'Thank you!'];
 
     Swal.fire({
@@ -105,19 +109,19 @@ export class AdminDashboardComponent implements OnInit {
 
     this.router.navigate([`/admin/dashboard`]);
   }
-
     
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event
     this.dtTrigger.unsubscribe();
   }
+
   ngOnInit(): void {
     this.dtOptions = {
       pagingType: 'full_numbers',
       pageLength: 10
     };
-    this.loadData();
-    this.routerService.getPreviousUrl();
+    // this.loadData();
+    // this.routerService.getPreviousUrl();
   }
 
 }

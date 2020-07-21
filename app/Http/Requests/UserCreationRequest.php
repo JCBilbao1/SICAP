@@ -28,7 +28,6 @@ class UserCreationRequest extends FormRequest
             'last_name' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required',
-            'role_name' => 'required',
         ];
     }
 }

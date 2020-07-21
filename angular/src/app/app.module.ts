@@ -23,12 +23,6 @@ import { AdminComponent } from './components/admin/admin.component';
 import { RegisterComponent } from './components/user/register/register.component';
 import { UserComponent } from './components/user/user.component';
 import { APIService } from './services/api.service';
-import { AdminDistributorsComponent } from './components/admin/admin-distributors/admin-distributors.component';
-import { AdminProductsComponent } from './components/admin/admin-products/admin-products.component';
-import { AdminOrdersComponent } from './components/admin/admin-orders/admin-orders.component';
-import { AdminOrderDetailComponent } from './components/admin/admin-order-detail/admin-order-detail.component';
-import { AdminDistributorDetailComponent } from './components/admin/admin-distributor-detail/admin-distributor-detail.component';
-import { AdminProductDetailComponent } from './components/admin/admin-product-detail/admin-product-detail.component';
 import { AdminNavbarComponent } from './components/admin/admin-navigation/admin-navbar/admin-navbar.component';
 import { CookieService } from 'ngx-cookie-service';
 import { OrdersComponent } from './components/skin-matters/skm-profile/orders/orders.component';
@@ -36,7 +30,6 @@ import { AccountDetailsComponent } from './components/skin-matters/skm-profile/a
 import { OrderDetailsComponent } from './components/skin-matters/skm-profile/orders/order-details/order-details.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { AddressesComponent } from './components/skin-matters/skm-profile/addresses/addresses.component';
-import { AdminProductCreateComponent } from './components/admin/admin-product-create/admin-product-create.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
@@ -52,25 +45,17 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptorService } from './services/token-interceptor.service';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { AdminCategoriesComponent } from './components/admin/admin-categories/admin-categories.component';
-import { AdminCategoriesDetailComponent } from './components/admin/admin-categories-detail/admin-categories-detail.component';
-import { AdminCategoriesCreateComponent } from './components/admin/admin-categories-create/admin-categories-create.component';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
-
-import { AdminRewardsComponent } from './components/admin/admin-rewards/admin-rewards.component';
-import { AdminRewardDetailComponent } from './components/admin/admin-reward-detail/admin-reward-detail.component';
-import { AdminRewardCreateComponent } from './components/admin/admin-reward-create/admin-reward-create.component';
 
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgxImageZoomModule } from 'ngx-image-zoom';
-import { AdminSalesComponent } from './components/admin/admin-sales/admin-sales.component';
 import { SkmRewardsComponent } from './components/skin-matters/skm-rewards/skm-rewards.component';
 import { SkmRewardDetailsComponent } from './components/skin-matters/skm-reward-details/skm-reward-details.component';
-import { AdminPaymentsComponent } from './components/admin/admin-payments/admin-payments.component';
-import { AdminPaymentCreateComponent } from './components/admin/admin-payment-create/admin-payment-create.component';
-import { AdminPaymentDetailComponent } from './components/admin/admin-payment-detail/admin-payment-detail.component';
-
+import { RequestPasswordResetComponent } from './components/user/request-password-reset/request-password-reset.component';
+import { ResponsePasswordResetComponent } from './components/user/response-password-reset/response-password-reset.component';
+import { AdminCommunityDevelopmentComponent } from './components/admin/admin-community-development/admin-community-development.component';
+import { AdminCommunityDevelopmentCreateComponent } from './components/admin/admin-community-development-create/admin-community-development-create.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -86,35 +71,22 @@ import { AdminPaymentDetailComponent } from './components/admin/admin-payment-de
     AdminComponent,
     RegisterComponent,
     UserComponent,
-    AdminDistributorsComponent,
-    AdminProductsComponent,
-    AdminOrdersComponent,
-    AdminOrderDetailComponent,
-    AdminDistributorDetailComponent,
-    AdminProductDetailComponent,
     AdminNavbarComponent,
     OrdersComponent,
     AccountDetailsComponent,
     OrderDetailsComponent,
     AddressesComponent,
-    AdminProductCreateComponent,
     SkmFooterComponent,
     AdminUsersComponent,
     AdminUserDetailComponent,
     AdminUserCreateComponent,
     AdminSidebarComponent,
-    AdminCategoriesComponent,
-    AdminCategoriesDetailComponent,
-    AdminCategoriesCreateComponent,
-    AdminRewardsComponent,
-    AdminRewardDetailComponent,
-    AdminRewardCreateComponent,
-    AdminSalesComponent,
     SkmRewardsComponent,
     SkmRewardDetailsComponent,
-    AdminPaymentsComponent,
-    AdminPaymentCreateComponent,
-    AdminPaymentDetailComponent,
+    RequestPasswordResetComponent,
+    ResponsePasswordResetComponent,
+    AdminCommunityDevelopmentComponent,
+    AdminCommunityDevelopmentCreateComponent,
   ],
   imports: [
     BrowserModule,

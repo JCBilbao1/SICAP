@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate } from '@angular/router';
+import { CanActivate, Router } from '@angular/router';
 import { TokenService } from './token.service';
 
 @Injectable({
@@ -7,10 +7,15 @@ import { TokenService } from './token.service';
 })
 export class BeforeLoginService implements CanActivate {
 
-  constructor(private Token: TokenService) { }
+  constructor(private Token: TokenService, private Router: Router) { }
   
   canActivate(route: import("@angular/router").ActivatedRouteSnapshot, state: import("@angular/router").RouterStateSnapshot): boolean | import("@angular/router").UrlTree | import("rxjs").Observable<boolean | import("@angular/router").UrlTree> | Promise<boolean | import("@angular/router").UrlTree> {
-    return !this.Token.loggedIn();
+    if(!this.Token.loggedIn()) {
+      return true;
+    } else {
+      return this.Router.parseUrl('/');
+    }
+    // return this.Token.loggedIn();
     throw new Error("Method not implemented.");
   }
 }

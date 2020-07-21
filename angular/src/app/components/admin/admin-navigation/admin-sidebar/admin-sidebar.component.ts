@@ -11,17 +11,21 @@ export class AdminSidebarComponent implements OnInit {
   constructor(
     private API:APIService
   ) { 
-    this.API.post('users/me','').subscribe(
+    this.API.post('auth/me','').subscribe(
         data => this.successResponse(data),
         error => this.errorResponse(error)
     );
   }
+
   successResponse(data){
-    this.hasRole = data.role
+    console.log(data);
+    this.hasRole = data.role.slug;
   }
+
   errorResponse(error){
     console.log(error)
   }
+
   ngOnInit(): void {
   }
 
