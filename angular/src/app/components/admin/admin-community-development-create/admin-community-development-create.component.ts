@@ -17,7 +17,7 @@ export class AdminCommunityDevelopmentCreateComponent implements OnInit {
   project_strategies = [];
   stakeholders = {
     'JRU' : {
-      'Students' : [
+      'Student' : [
         'Name', 'Yr. Level', 'Program', 'Student Organization'
       ],
       'Faculty' : [
@@ -26,7 +26,7 @@ export class AdminCommunityDevelopmentCreateComponent implements OnInit {
       'Employee/Staff' : [
         'Name', 'Yr. Level - 0', 'Program/Office', 'Designation'
       ],
-      'Officers' : [
+      'Officer' : [
         'Name', 'Yr. Level', 'Program/Office'
       ]
     },
@@ -34,15 +34,15 @@ export class AdminCommunityDevelopmentCreateComponent implements OnInit {
       'Individual/Families' : [
         'Name', 'Address', 'Contact Number'
       ],
-      'Gov. Officials' : [
+      'Gov. Official' : [
         'Name', 'Address', 'Contact Number', 'Designation'
       ],
-      'Ogranizations/Institutions' : [
+      'Ogranizations/Institution' : [
         'Name of Organization', 'Contact Person', 'Address', 'Contact Number'
       ],
     },
     'Other' : {
-      'Organizations' : [
+      'Organization' : [
         'Name of Organization', 'Contact Person', 'Address', 'Contact Number'
       ],
       'Business and Industry' : [
@@ -51,7 +51,7 @@ export class AdminCommunityDevelopmentCreateComponent implements OnInit {
       'Institutional Community' : [
         'Name of Institution', 'Contact Person', 'Address', 'Contact Number'
       ],
-      'Donors' : [
+      'Donor' : [
         'Name of Donor', 'Contact Person', 'Address', 'Contact Number'
       ],
     }
@@ -96,12 +96,22 @@ export class AdminCommunityDevelopmentCreateComponent implements OnInit {
   }
 
   save(){
-    console.log(this.project_form);
+    console.log(this.added_stakeholders);
     console.log(this.project_stakeholders);
-    // this.API.post('users',this.project_form.value).subscribe(
-    //   data => this.responseSuccess(data),
-    //   error => this.responseError(error)
-    // );
+    let project = this.project_form.value;
+    let project_stakeholders = this.project_stakeholders;
+    this.API.post('projects', {
+        project_area : project.project_area,
+        project_strategy : project.project_strategy,
+        project_place : project.project_place,
+        project_theme : project.project_theme,
+        project_date : project.project_date,
+        project_time : project.project_time,
+        stakeholders : project_stakeholders
+    }).subscribe(
+      data => this.responseSuccess(data),
+      error => this.responseError(error)
+    );
   }
 
   responseSuccess(data){
@@ -118,9 +128,8 @@ export class AdminCommunityDevelopmentCreateComponent implements OnInit {
   }
 
   responseError(error){
-    console.log(error)
+    console.error(error)
     this.project_form_errors = error.error.errors;
-    console.log(this.project_form_errors);
     Swal.fire({
       position: 'top-end',
       icon: 'error',
@@ -132,6 +141,11 @@ export class AdminCommunityDevelopmentCreateComponent implements OnInit {
 
   addStakeHolder(stakeholder_key) {
     this.added_stakeholders.push(this.stakeholders[stakeholder_key]);
+    this.project_stakeholders.push({
+      'stakeholder' : stakeholder_key,
+      'stakeholder_type' : '',
+      'stakeholder_field_data' : []
+    });
   }
 
   removeStakeHolder(index) {
@@ -145,7 +159,8 @@ export class AdminCommunityDevelopmentCreateComponent implements OnInit {
       let field_title = this.added_stakeholders[index][stakeholder_type_key][i];
       field_array.push({key : field_title, value : ''});
     }
-    this.project_stakeholders[index] = field_array;
+    this.project_stakeholders[index].stakeholder_type = stakeholder_type_key;
+    this.project_stakeholders[index].stakeholder_field_data = field_array;
   }
 
   ngOnInit(): void {

@@ -15,7 +15,9 @@ Route::group(['middleware'=>'api','prefix' => 'auth'], function () {
 Route::group(['middleware' => 'api'], function($api){
     Route::apiResource('users', 'UserController');
     Route::apiResource('roles', 'RolesController');
+    Route::apiResource('projects', 'ProjectController');
     Route::apiResource('project-areas', 'ProjectAreaController');
     Route::apiResource('project-strategies', 'ProjectStrategyController');
     Route::delete('users/delete-temporary/{id}', 'UserController@deleteTemporary');
+    Route::delete('projects/delete-temporary/{id}', 'ProjectController@deleteTemporary');
 });
