@@ -12,14 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
 
   projectId;
-  project_form = this.formBuilder.group({
-    project_area : '',
-    project_strategy : '',
-    project_date : '',
-    project_time : '',
-    project_place : '',
-    project_theme : ''
-  });
+  project_form;
   project_form_errors;
   project_areas = [];
   project_strategies = [];
@@ -76,6 +69,14 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
   ) {
+    this.project_form = this.formBuilder.group({
+      project_area : '',
+      project_strategy : '',
+      project_date : '',
+      project_time : '',
+      project_place : '',
+      project_theme : ''
+    });
     this.getProjectAreas();
     this.getProjectStrategies();
     this.projectId = this.route.snapshot.paramMap.get("projectId");
