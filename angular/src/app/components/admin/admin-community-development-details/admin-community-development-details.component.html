@@ -1,0 +1,165 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
+    <h2>JRU - Community Development Program</h2>
+</div>
+<nav aria-label="breadcrumb" class="border-bottom mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+        <li class="breadcrumb-item"><a routerLink="/community-development">Community Development Program</a></li>
+        <li class="breadcrumb-item">{{projectId}}</li>
+    </ol>
+</nav>
+
+<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="project-details-tab" [routerLink]="" (click)="openTab('project-details')">Outreach Details</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" [routerLink]="" id="project-stakeholders-tab" (click)="openTab('project-stakeholders')">Stakeholders</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" [routerLink]="" id="evaluation-report-tab" (click)="openTab('evaluation-report')">Evaluation/Report</a>
+    </li>
+</ul>
+<div class="tab-content" id="pills-tabContent">
+    <div class="tab-pane fade show active" id="project-details" role="tabpanel" aria-labelledby="pills-project-details-tab">
+        <form [formGroup]="project_form">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-row">
+                                <fieldset class="form-group">
+                                    <div class="row" [ngClass]="{'is-invalid' : project_form.project_area}">
+                                        <legend class="col-form-label col-sm-3 pt-0">Project Area</legend>
+                                        <div class="col-sm-9">
+                                            <div class="row">
+                                                <div class="form-check col-sm-6" *ngFor="let area of project_areas">
+                                                    <input class="form-check-input" name="project_area" type="radio" id="project_area{{area.id}}" value="{{area.name}}" formControlName="project_area">
+                                                    <label class="form-check-label" for="project_area{{area.id}}">
+                                                        {{area.name}}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="error-feedback">
+                                        <p *ngFor="let error of project_form_errors?.project_area">{{error}}</p>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="form-group">
+                                    <div class="row">
+                                        <legend class="col-form-label col-sm-3 pt-0">Project Strategy</legend>
+                                        <div class="col-sm-9">
+                                            <select name="project_strategy" id="project_strategy" class="form-control" [ngClass]="{'is-invalid' : project_form.project_strategy}" formControlName="project_strategy" id="project_strategy" placeholder="Project Strategy">
+                                                <option value="" selected disabled>Select strategy</option>
+                                                <option *ngFor="let strategy of project_strategies" value="{{strategy.name}}">{{strategy.name}}</option>
+                                            </select>
+                                            <div class="error-feedback">
+                                                <p *ngFor="let error of project_form_errors?.project_strategy">{{error}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-row">
+                                <fieldset class="form-group col-sm-12">
+                                    <div class="row" [ngClass]="{'is-invalid' : project_form.project_date}">
+                                        <legend class="col-form-label col-sm-3 pt-0">Date</legend>
+                                        <div class="col-sm-9">
+                                            <input class="form-input" name="project_date" type="text" id="project_date" formControlName="project_date" placeholder="YYYY-MM-DD">
+                                        </div>
+                                    </div>
+                                    <div class="error-feedback">
+                                        <p *ngFor="let error of project_form_errors?.project_date">{{error}}</p>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="form-group col-sm-12">
+                                    <div class="row" [ngClass]="{'is-invalid' : project_form.project_time}">
+                                        <legend class="col-form-label col-sm-3 pt-0">Time</legend>
+                                        <div class="col-sm-9">
+                                            <input class="form-input" name="project_time" type="text" id="project_time" formControlName="project_time" placeholder="24:00">
+                                        </div>
+                                    </div>
+                                    <div class="error-feedback">
+                                        <p *ngFor="let error of project_form_errors?.project_time">{{error}}</p>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="form-group col-sm-12">
+                                    <div class="row" [ngClass]="{'is-invalid' : project_form.project_place}">
+                                        <legend class="col-form-label col-sm-3 pt-0">Place</legend>
+                                        <div class="col-sm-9">
+                                            <textarea class="form-input" name="project_place" id="project_place" formControlName="project_place" placeholder="Enter Place of Project"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="error-feedback">
+                                        <p *ngFor="let error of project_form_errors?.project_place">{{error}}</p>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="form-group col-sm-12">
+                                    <div class="row" [ngClass]="{'is-invalid' : project_form.project_theme}">
+                                        <legend class="col-form-label col-sm-3 pt-0">Theme/ Event</legend>
+                                        <div class="col-sm-9">
+                                            <input class="form-input" name="project_theme" type="text" id="project_theme" formControlName="project_theme" placeholder="Enter Theme/ Event of Project">
+                                        </div>
+                                    </div>
+                                    <div class="error-feedback">
+                                        <p *ngFor="let error of project_form_errors?.project_theme">{{error}}</p>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="tab-pane fade" id="project-stakeholders" role="tabpanel" aria-labelledby="project-stakeholders-tab">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="form-row" [ngClass]="{'is-invalid' : project_form.stakeholders}">
+                        <button type="button" class="btn btn-info" *ngFor="let stakeholder of stakeholder_keys" (click)="addStakeHolder(stakeholder)">Add {{stakeholder}}</button>
+                    </div>
+                    <div class="error-feedback">
+                        <p *ngFor="let error of project_form_errors?.stakeholders">{{error}}</p>
+                    </div>
+                    <div class="form-row" *ngFor="let added_stakeholder of added_stakeholders; index as i">
+                        <div class="col-sm-3">
+                            <button type="button" class="btn btn-danger" (click)="removeStakeHolder(i)">Remove</button>
+                            <select class="form-control" (change)="stakeholder_type_selected(i,$event.target.value)">
+                                <option value="" selected disabled>Select Stakeholder</option>
+                                <option *ngFor="let stakeholder_type of added_stakeholder | keyvalue" value="{{stakeholder_type.key}}">{{stakeholder_type.key}}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-9">
+                            <div class="form-row" *ngFor="let stakeholder of project_stakeholders[i].stakeholder_field_data; index as in">
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-5 pt-0">{{stakeholder.stakeholder_field}}</legend>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-input" [(ngModel)]="stakeholder.stakeholder_field_value" placeholder="Enter {{stakeholder.stakeholder_field}}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+        </div>
+    </div>
+    <div class="tab-pane fade" id="evaluation-report" role="tabpanel" aria-labelledby="evaluation-report-tab">
+
+    </div>
+</div>
+
+<div class="col-lg-12">
+    <hr>
+    <div class="form-group float-right" >
+        <button type="submit" class="btn btn-primary" (click)="save()">Save</button>
+    </div>
+</div>

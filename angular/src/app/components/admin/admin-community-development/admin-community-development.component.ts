@@ -34,8 +34,6 @@ export class AdminCommunityDevelopmentComponent implements OnInit {
   applyData(data){
     data.forEach(function(obj){
       console.log(obj);
-      if(obj.roles.length == 0)
-        obj.roles= [{name: "None"}];
     });
     console.log(data);
     this.programs = data;

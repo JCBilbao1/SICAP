@@ -9,6 +9,7 @@ import { BeforeLoginService } from './services/before-login.service';
 import { AdminUsersComponent } from './components/admin/admin-users/admin-users.component';
 import { AdminCommunityDevelopmentComponent } from './components/admin/admin-community-development/admin-community-development.component';
 import { AdminCommunityDevelopmentCreateComponent } from './components/admin/admin-community-development-create/admin-community-development-create.component';
+import { AdminCommunityDevelopmentDetailsComponent } from './components/admin/admin-community-development-details/admin-community-development-details.component';
 
 //url and component connection
 const routes: Routes = [
@@ -38,6 +39,10 @@ const routes: Routes = [
       {
         path: 'community-development/create',
         component: AdminCommunityDevelopmentCreateComponent
+      },
+      {
+        path: 'community-development/:projectId',
+        component: AdminCommunityDevelopmentDetailsComponent
       },
       {
         path: 'users',

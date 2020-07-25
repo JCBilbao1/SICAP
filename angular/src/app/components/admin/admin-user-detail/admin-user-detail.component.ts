@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
-import { Router } from '@angular/router';
 import { APIService } from 'src/app/services/api.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 
@@ -21,7 +20,6 @@ export class AdminUserDetailComponent implements OnInit {
     private API:APIService,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router,
   ) { 
     this.user_form = this.formBuilder.group({
       first_name : '',
@@ -37,7 +35,7 @@ export class AdminUserDetailComponent implements OnInit {
   loadData(){
     this.API.get(`users/${this.userId}`).subscribe(
       data => this.applyData(data),
-      error => console.log(error)
+      error => console.error(error)
     );
   }
 

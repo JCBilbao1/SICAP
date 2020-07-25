@@ -28,10 +28,10 @@
           <td>{{item.id}}</td>
           <td>{{item.project_area}}</td>
           <td>{{item.theme}} </td>
-          <td>{{item.created_at}}</td>
+          <td>{{item.created_at | date : 'longDate'}}</td>
           <td>
             <button class="btn btn-sm btn-primary" routerLink="/community-development/{{item.id}}">
-              view
+              View
             </button>
             <!-- <button class="btn btn-sm btn-danger"  style="margin-left:5px" (click)="decline(item)">
                 delete

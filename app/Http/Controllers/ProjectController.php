@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Project;
+use App\Models\Stakeholder;
 
 class ProjectController extends Controller
 {
@@ -14,7 +15,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $project = Project::all();
+        $project = Project::with('stakeholders')->get();
         return response()->json($project);
     }
 
@@ -26,15 +27,21 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $rules = [
             'project_area' => 'required',
             'project_strategy' => 'required',
             'project_place' => 'required',
             'project_theme' => 'required',
             'project_date' => 'required|date_format:Y-m-d',
             'project_time' => 'required|date_format:H:i',
-            'stakeholders' => 'required|array|min:1'
-        ]);
+        ];
+    
+        $customMessages = [
+            'project_date.date_format' => 'The date must be in YYYY-MM-DD format.',
+            'project_time.date_format' => 'The time must be in 24 hour & HH:MM format.'
+        ];
+    
+        $this->validate($request, $rules, $customMessages);
         $date = date_format(date_create($request['project_date'].' '.$request['project_time']), "Y/m/d H:i:s");
 
         $project = new Project;
@@ -45,20 +52,7 @@ class ProjectController extends Controller
         $project->date = $date;
         $project->save();
 
-        $stakeholders = $request['stakeholders'];
-        foreach($stakeholders as $stakeholder) {
-            foreach($stakeholder['stakeholder_field_data'] as $field_data) {
-                $stakeholder_data = new Stakeholder([
-                    'stakeholder' => $stakeholder['stakeholder'],
-                    'stakeholder_type' => $stakeholder['stakeholder_type'],
-                    'stakeholder_field' => $field_data['key'],
-                    'stakeholder_field_value' => $field_data['value']
-                ]);
-                $project->stakeholders()->save($stakeholder_data);
-            }
-        }
-
-        return response()->json(['status'=>"Success Creation!"]);
+        return response()->json(['status'=>'Project created!', 'project_id'=>$project->id]);
     }
 
     /**
@@ -70,7 +64,7 @@ class ProjectController extends Controller
     public function show($id)
     {
         $project = Project::find($id);
-        $project->stakeholders = $project->stakeholders;
+        $project->stakeholders = $project->stakeholders()->with('field_data')->get();
         return response()->json($project);
     }
 
@@ -83,15 +77,21 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
+        $rules = [
             'project_area' => 'required',
             'project_strategy' => 'required',
             'project_place' => 'required',
             'project_theme' => 'required',
             'project_date' => 'required|date_format:Y-m-d',
             'project_time' => 'required|date_format:H:i',
-            'stakeholders' => 'required|array|min:1'
-        ]);
+        ];
+    
+        $customMessages = [
+            'project_date.date_format' => 'The date must be in YYYY-MM-DD format.',
+            'project_time.date_format' => 'The time must be in 24 hour & HH:MM format.'
+        ];
+    
+        $this->validate($request, $rules, $customMessages);
         $date = date_format(date_create($request['project_date'].' '.$request['project_time']), "Y/m/d H:i:s");
         
         $project = Project::find($id);
@@ -104,18 +104,24 @@ class ProjectController extends Controller
 
         $stakeholders = $request['stakeholders'];
         foreach($stakeholders as $stakeholder) {
+            $new_stakeholder = new Stakeholder;
+            $new_stakeholder->project_id = $project->id;
+            $new_stakeholder->stakeholder = $stakeholder['stakeholder'];
+            $new_stakeholder->stakeholder_type = $stakeholder['stakeholder_type'];
+            $new_stakeholder->save();
             foreach($stakeholder['stakeholder_field_data'] as $field_data) {
-                $stakeholder_data = new Stakeholder([
-                    'stakeholder' => $stakeholder['stakeholder'],
-                    'stakeholder_type' => $stakeholder['stakeholder_type'],
+                $stakeholder_field_data = [
+                    'project_stakeholder_id' => $new_stakeholder->id,
                     'stakeholder_field' => $field_data['key'],
                     'stakeholder_field_value' => $field_data['value']
-                ]);
-                $project->stakeholders()->save($stakeholder_data);
+                ];
+                $new_stakeholder->field_data()->insert($stakeholder_field_data);
             }
         }
+        
+        $project->stakeholders = $project->stakeholders;
 
-        return response()->json(['status'=>"Update Success!"]);
+        return response()->json(['status'=>'Project Updated!', 'data'=>$project]);
     }
 
     /**

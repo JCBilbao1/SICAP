@@ -9,7 +9,7 @@ class Project extends Model
     protected $table = 'projects';
     
     protected $fillable = [
-        'project_id', 'project_area', 'project_strategy', 'place', 'theme', 'date',
+        'project_area', 'project_strategy', 'place', 'theme', 'date',
     ];
 
     public function stakeholders()

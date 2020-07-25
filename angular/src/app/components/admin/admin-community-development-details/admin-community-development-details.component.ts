@@ -2,16 +2,24 @@ import { Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { APIService } from 'src/app/services/api.service';
 import { FormBuilder } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-admin-community-development-create',
-  templateUrl: './admin-community-development-create.component.html',
-  styleUrls: ['./admin-community-development-create.component.sass']
+  selector: 'app-admin-community-development-details',
+  templateUrl: './admin-community-development-details.component.html',
+  styleUrls: ['./admin-community-development-details.component.sass']
 })
-export class AdminCommunityDevelopmentCreateComponent implements OnInit {
+export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
 
-  project_form;
+  projectId;
+  project_form = this.formBuilder.group({
+    project_area : '',
+    project_strategy : '',
+    project_date : '',
+    project_time : '',
+    project_place : '',
+    project_theme : ''
+  });
   project_form_errors;
   project_areas = [];
   project_strategies = [];
@@ -67,18 +75,43 @@ export class AdminCommunityDevelopmentCreateComponent implements OnInit {
     private API:APIService,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router,
   ) {
     this.getProjectAreas();
     this.getProjectStrategies();
+    this.projectId = this.route.snapshot.paramMap.get("projectId");
+    this.loadProject();    
+  }
+
+  loadProject(){
+    this.API.get(`projects/${this.projectId}`).subscribe(
+      data => this.applyData(data),
+      error => console.error(error)
+    );
+  }
+
+  applyData(data){
+    console.log(data);
+    let date = new Date(data.date);
     this.project_form = this.formBuilder.group({
-      project_area : '',
-      project_strategy : '',
-      project_date : '',
-      project_time : '',
-      project_place : '',
-      project_theme : ''
+      project_area : data.project_area,
+      project_strategy : data.project_strategy,
+      project_date : date.getFullYear() + '-' + (((date.getMonth()+1)<=9) ? '0' : '') + (date.getMonth()+1) + '-' + (((date.getDate())<=9) ? '0' : '') + date.getDate(),
+      project_time : (((date.getHours())<=9) ? '0' : '') + date.getHours( ) + ':' + (((date.getMinutes())<=9) ? '0' : '') + date.getMinutes(),
+      project_place : data.place,
+      project_theme : data.theme
     });
+    this.loadStakeHolders(data.stakeholders);
+  }
+
+  loadStakeHolders(stakeholders_data) {
+    for(let i = 0; i < stakeholders_data.length; i++) {
+      this.added_stakeholders.push(this.stakeholders[stakeholders_data[i].stakeholder]);
+      this.project_stakeholders.push({
+        'stakeholder' : stakeholders_data[i].stakeholder,
+        'stakeholder_type' : stakeholders_data[i].stakeholder_type,
+        'stakeholder_field_data' : stakeholders_data[i].field_data
+      });
+    }
   }
 
   getProjectAreas() {
@@ -96,12 +129,10 @@ export class AdminCommunityDevelopmentCreateComponent implements OnInit {
   }
 
   save(){
-    console.log(this.added_stakeholders);
-    console.log(this.project_stakeholders);
     this.project_form_errors = null;
     let project = this.project_form.value;
     let project_stakeholders = this.project_stakeholders;
-    this.API.post('projects', {
+    this.API.put('projects/'+this.projectId, {
         project_area : project.project_area,
         project_strategy : project.project_strategy,
         project_place : project.project_place,
@@ -110,21 +141,18 @@ export class AdminCommunityDevelopmentCreateComponent implements OnInit {
         project_time : project.project_time,
         stakeholders : project_stakeholders
     }).subscribe(
-      data => this.responseSuccess(data),
+      (data:any) => this.responseSuccess(data.data),
       error => this.responseError(error)
     );
   }
 
   responseSuccess(data){
-    let $this = this;
+    this.applyData(data);
     Swal.fire({
       'title':data.status,
       'icon':'success',
       showConfirmButton: false,
       timer: 1500,
-      onClose: ()=>{
-        $this.router.navigate(['/community-development/' + data.project_id]);
-      }
     });
   }
 
@@ -162,6 +190,24 @@ export class AdminCommunityDevelopmentCreateComponent implements OnInit {
     }
     this.project_stakeholders[index].stakeholder_type = stakeholder_type_key;
     this.project_stakeholders[index].stakeholder_field_data = field_array;
+  }
+
+  openTab(tab) {
+    var i, tabcontent, tablinks;
+  
+    tabcontent = document.getElementsByClassName("tab-pane");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    
+    tablinks = document.getElementsByClassName("nav-link");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tab+'-tab').className += ' active';
+  
+    document.getElementById(tab).style.display = "block";
+    document.getElementById(tab).className += 'show active';
   }
 
   ngOnInit(): void {

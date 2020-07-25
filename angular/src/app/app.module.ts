@@ -56,6 +56,7 @@ import { RequestPasswordResetComponent } from './components/user/request-passwor
 import { ResponsePasswordResetComponent } from './components/user/response-password-reset/response-password-reset.component';
 import { AdminCommunityDevelopmentComponent } from './components/admin/admin-community-development/admin-community-development.component';
 import { AdminCommunityDevelopmentCreateComponent } from './components/admin/admin-community-development-create/admin-community-development-create.component';
+import { AdminCommunityDevelopmentDetailsComponent } from './components/admin/admin-community-development-details/admin-community-development-details.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -87,6 +88,7 @@ import { AdminCommunityDevelopmentCreateComponent } from './components/admin/adm
     ResponsePasswordResetComponent,
     AdminCommunityDevelopmentComponent,
     AdminCommunityDevelopmentCreateComponent,
+    AdminCommunityDevelopmentDetailsComponent,
   ],
   imports: [
     BrowserModule,

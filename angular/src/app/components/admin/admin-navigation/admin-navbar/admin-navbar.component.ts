@@ -25,17 +25,15 @@ export class AdminNavbarComponent implements OnInit {
   }
   
   successResponse(data){
-    console.log('auth');
     if(!data.admin){
       this.Auth.changeAuthStatus(false);
       this.Token.remove();
       this.router.navigateByUrl('/login');
     }
-    console.log(data);
   }
 
   errorResponse(error){
-    console.log(error);
+    console.error(error);
   }
 
   logout(e: MouseEvent){

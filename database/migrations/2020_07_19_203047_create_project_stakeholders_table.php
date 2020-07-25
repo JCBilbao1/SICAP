@@ -16,11 +16,9 @@ class CreateProjectStakeholdersTable extends Migration
         Schema::create('project_stakeholders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('project_id');
-            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');;
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->text('stakeholder');
             $table->text('stakeholder_type');
-            $table->text('stakeholder_field');
-            $table->text('stakeholder_field_value');
         });
     }
 
