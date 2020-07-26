@@ -105,6 +105,8 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
   }
 
   loadStakeHolders(stakeholders_data) {
+    this.added_stakeholders = [];
+    this.project_stakeholders = [];
     for(let i = 0; i < stakeholders_data.length; i++) {
       this.added_stakeholders.push(this.stakeholders[stakeholders_data[i].stakeholder]);
       this.project_stakeholders.push({
@@ -112,6 +114,7 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
         'stakeholder_type' : stakeholders_data[i].stakeholder_type,
         'stakeholder_field_data' : stakeholders_data[i].field_data
       });
+      console.log(this.added_stakeholders);
     }
   }
 
@@ -176,6 +179,7 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
       'stakeholder_type' : '',
       'stakeholder_field_data' : []
     });
+    console.log(this.project_stakeholders);
   }
 
   removeStakeHolder(index) {
@@ -187,10 +191,11 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
     let field_array = [];
     for( let i = 0; i < this.added_stakeholders[index][stakeholder_type_key].length; i++) {
       let field_title = this.added_stakeholders[index][stakeholder_type_key][i];
-      field_array.push({key : field_title, value : ''});
+      field_array.push({stakeholder_field : field_title, stakeholder_field_value : ''});
     }
     this.project_stakeholders[index].stakeholder_type = stakeholder_type_key;
     this.project_stakeholders[index].stakeholder_field_data = field_array;
+    console.log(this.project_stakeholders);
   }
 
   openTab(tab) {

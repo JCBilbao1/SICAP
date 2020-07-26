@@ -132,7 +132,7 @@
                     <div class="form-row" *ngFor="let added_stakeholder of added_stakeholders; index as i">
                         <div class="col-sm-3">
                             <button type="button" class="btn btn-danger" (click)="removeStakeHolder(i)">Remove</button>
-                            <select class="form-control" (change)="stakeholder_type_selected(i,$event.target.value)">
+                            <select class="form-control" (change)="stakeholder_type_selected(i,$event.target.value)" [(ngModel)]="project_stakeholders[i].stakeholder_type">
                                 <option value="" selected disabled>Select Stakeholder</option>
                                 <option *ngFor="let stakeholder_type of added_stakeholder | keyvalue" value="{{stakeholder_type.key}}">{{stakeholder_type.key}}</option>
                             </select>

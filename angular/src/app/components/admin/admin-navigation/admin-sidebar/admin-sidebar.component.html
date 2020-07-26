@@ -2,15 +2,15 @@
   <div class="sidebar-sticky pt-3">
     <ul class="nav flex-column">
       <li class="nav-item">
-        <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" *ngIf="hasRole == 'admin'">
+        <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           <span data-feather="home"></span>
           Dashboard
         </a>
-        <a class="nav-link" routerLink="/community-development" routerLinkActive="active" *ngIf="hasRole == 'admin'">
+        <a class="nav-link" routerLink="/community-development" routerLinkActive="active">
           <span data-feather="bar-chart-2"></span>
           JRU - Community Development Program
         </a>
-        <a class="nav-link" routerLink="/users" routerLinkActive="active" *ngIf="hasRole == 'admin'">
+        <a class="nav-link" routerLink="/users" routerLinkActive="active">
           <span data-feather="bar-chart-2"></span>
           Manage Users
         </a>
