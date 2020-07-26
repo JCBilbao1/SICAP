@@ -1,10 +1,17 @@
 <div class="limiter">
-    <div class="container-login100">
+    <div class="container-login100" style="background-color: rgba(242,173,0,.9);">
         <div class="wrap-login100">
-            <div class="login100-form-title" style="background-image: url(assets/skin_matters_assets/logo_bg.jpg);">
-                <span class="login100-form-title-1">
-                </span>
+         <!-- login header start-->
+            <div class="d-flex justify-content-center"> 
+                <img id="profile-img" style="height:100px;width:200px; margin-top:10px;" src="http://jru.edu/jru_wp/wp-content/uploads/2020/03/JRUC-logo-1000x472.png">
             </div>
+            <div class="d-flex justify-content-center">
+                <h4>José Rizal University</h4>
+            </div>
+            <div class="d-flex justify-content-center">
+                <h5> Community Development Office SICAP</h5>
+            </div>
+        <!-- login header end-->
             <form class="login100-form validate-form" #loginForm=ngForm (ngSubmit)="onSubmit()">
                 <div class="row">
                     <div class="form-group col-lg-12">
@@ -40,8 +47,8 @@
                         </div>
                     </div>
                     <div class="form-group col-lg-12">
-                        <button (click)="back()" class="btn btn-default float-left">Back</button>
-                        <button type="submit" class="btn btn-primary float-right" [disabled]="!loginForm.valid">Sign up</button>
+                        <button (click)="back()" class="btn btn-default float-left" style="width:25%;">Back</button>
+                        <button type="submit" class="btn btn-primary float-right"  style="background-color: #152d65; width:25%;" [disabled]="!loginForm.valid">Sign up</button>
                     </div>
                 </div>
             </form>

@@ -1,13 +1,31 @@
-<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-  <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="#">SICAP</a>
-  <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse"
-    data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+<!-- Upper navigation bar start -->
+<nav class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow navbar-toggleable-md navbar-light bg-faded" style="background-color: #f9bd3b; height:50px;">
+  <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" style="color:#152d65;"><h2>JRU-SICAP</h2></a>
   <ul class="navbar-nav px-3">
     <li class="nav-item text-nowrap">
       <a class="nav-link" routerLink="/login" *ngIf="!loggedIn" >Sign in</a>
-      <a class="nav-link" href="#" (click)="logout($event)" *ngIf="loggedIn" >Sign out</a>
+      <a class="nav-link" href="#" (click)="logout($event)" *ngIf="loggedIn" style="color: black;"> Sign out <i class="fa fa-sign-out" style="font-size:24px"></i></a>
     </li>
   </ul>
 </nav>
+<!-- Upper navigation bar end -->
+
+<!-- Lower navigation bar start -->
+<nav class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow navbar-toggleable-md navbar-light bg-faded" style="background-color: #152d65;">
+  
+  <div>
+    <ul class="navbar-nav" style="margin-left:10px;">
+      <li class="nav-item active">
+       <img class="rounded-circle" style="height:60px;margin-top:20px;" src="https://upload.wikimedia.org/wikipedia/en/2/2f/Jose_Rizal_University_seal.svg" />
+      </li>
+      <li>
+        <p style="font-size:13px; margin-left:70px; margin-top:-70px; color: white;"> Welcome!</p>
+        <p style="font-size:14px; margin-top:-10px; margin-left:70px; color: white;"> Mary Ann Bernadette </p>
+        <p style="font-size:13px; margin-top:-10px; margin-left:70px; color: white;"> CDO-Coordinator</p>
+      </li>
+    </ul>
+    
+  </div>  
+
+</nav>
+<!-- Lower navigation bar end -->

@@ -1,20 +1,14 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
     <h2>JRU - Community Development Program</h2>
   </div>
-  <nav aria-label="breadcrumb" class="border-bottom mb-3">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-        <li class="breadcrumb-item">Community Development Program</li>
-    </ol>
-  </nav>
   <div class="row tools">
-    <div class="col-lg-12">
-      <button routerLink="/community-development/create" type="button" class="btn btn-primary float-right">Create Program</button>
+    <div class="col-lg-12" >
+      <button routerLink="/community-development/create" type="button" class="btn btn-primary float-right" style="background-color: #152d65;">Create Outreach</button>
     </div>
   </div>
-  <div class="table-responsive">
+  <div class="table-responsive" style="margin-top: 10px;">
     <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table row-border hover">
-      <thead class="table-dark">
+      <thead style="background-color: #f9bd3b;">
         <tr>
           <th>ID</th>
           <th>Area</th>
