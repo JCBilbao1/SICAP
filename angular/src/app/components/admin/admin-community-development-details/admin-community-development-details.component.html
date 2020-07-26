@@ -1,25 +1,30 @@
+<!-- header start -->
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
     <h2>JRU - Community Development Program</h2>
 </div>
-<nav aria-label="breadcrumb" class="border-bottom mb-3">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-        <li class="breadcrumb-item"><a routerLink="/community-development">Community Development Program</a></li>
-        <li class="breadcrumb-item">{{projectId}}</li>
-    </ol>
-</nav>
+<!-- header end -->
+
 
 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+    <!-- Details -->
     <li class="nav-item">
-        <a class="nav-link active" id="project-details-tab" [routerLink]="" (click)="openTab('project-details')">Outreach Details</a>
+        <a class="nav-link active" id="project-details-tab" [routerLink]="" (click)="openTab('project-details')" style="background-color: #152d65;color:white; ">Outreach Details</a>
     </li>
+    <!-- stakeholders -->
     <li class="nav-item">
-        <a class="nav-link" [routerLink]="" id="project-stakeholders-tab" (click)="openTab('project-stakeholders')">Stakeholders</a>
+        <a class="nav-link" [routerLink]="" id="project-stakeholders-tab" (click)="openTab('project-stakeholders')" style="background-color: #152d65;color:white;margin-left:10px;">Stakeholders</a>
     </li>
+    <!-- Evaluation -->
     <li class="nav-item">
-        <a class="nav-link" [routerLink]="" id="evaluation-report-tab" (click)="openTab('evaluation-report')">Evaluation/Report</a>
+        <a class="nav-link" [routerLink]="" id="evaluation-tab" (click)="openTab('evaluation')" style="background-color: #152d65;color:white;margin-left:10px;">Evaluation</a>
+    </li>
+    <!-- Report -->
+    <li class="nav-item">
+        <a class="nav-link" [routerLink]="" id="report-tab" (click)="openTab('report')" style="background-color: #152d65;color:white;margin-left:10px;">Report</a>
     </li>
 </ul>
+
+<!-- Details tab start -->
 <div class="tab-content" id="pills-tabContent">
     <div class="tab-pane fade show active" id="project-details" role="tabpanel" aria-labelledby="pills-project-details-tab">
         <form [formGroup]="project_form">
@@ -72,7 +77,7 @@
                                     <div class="row" [ngClass]="{'is-invalid' : project_form?.project_date}">
                                         <legend class="col-form-label col-sm-3 pt-0">Date</legend>
                                         <div class="col-sm-9">
-                                            <input class="form-input" name="project_date" type="text" id="project_date" formControlName="project_date" placeholder="YYYY-MM-DD">
+                                            <input class="form-control form-input" name="project_date" type="text" id="project_date" formControlName="project_date" placeholder="YYYY-MM-DD">
                                         </div>
                                     </div>
                                     <div class="error-feedback">
@@ -83,7 +88,7 @@
                                     <div class="row" [ngClass]="{'is-invalid' : project_form?.project_time}">
                                         <legend class="col-form-label col-sm-3 pt-0">Time</legend>
                                         <div class="col-sm-9">
-                                            <input class="form-input" name="project_time" type="text" id="project_time" formControlName="project_time" placeholder="24:00">
+                                            <input class="form-control form-input" name="project_time" type="text" id="project_time" formControlName="project_time" placeholder="24:00">
                                         </div>
                                     </div>
                                     <div class="error-feedback">
@@ -94,7 +99,7 @@
                                     <div class="row" [ngClass]="{'is-invalid' : project_form?.project_place}">
                                         <legend class="col-form-label col-sm-3 pt-0">Place</legend>
                                         <div class="col-sm-9">
-                                            <textarea class="form-input" name="project_place" id="project_place" formControlName="project_place" placeholder="Enter Place of Project"></textarea>
+                                            <textarea class="form-control form-input" name="project_place" id="project_place" formControlName="project_place" placeholder="Enter Place of Project"></textarea>
                                         </div>
                                     </div>
                                     <div class="error-feedback">
@@ -105,7 +110,7 @@
                                     <div class="row" [ngClass]="{'is-invalid' : project_form?.project_theme}">
                                         <legend class="col-form-label col-sm-3 pt-0">Theme/ Event</legend>
                                         <div class="col-sm-9">
-                                            <input class="form-input" name="project_theme" type="text" id="project_theme" formControlName="project_theme" placeholder="Enter Theme/ Event of Project">
+                                            <input class="form-control form-input" name="project_theme" type="text" id="project_theme" formControlName="project_theme" placeholder="Enter Theme/ Event of Project">
                                         </div>
                                     </div>
                                     <div class="error-feedback">
@@ -119,47 +124,90 @@
             </div>
         </form>
     </div>
+<!-- Details tab end -->
+
+
+<!-- Stakeholders tab start -->
     <div class="tab-pane fade" id="project-stakeholders" role="tabpanel" aria-labelledby="project-stakeholders-tab">
         <div class="col-lg-12">
             <div class="card">
-                <div class="card-body">
+                <div class="card-body"> 
+
+                    <!-- add buttons -->
                     <div class="form-row" [ngClass]="{'is-invalid' : stakeholders}">
-                        <button type="button" class="btn btn-info" *ngFor="let stakeholder of stakeholder_keys" (click)="addStakeHolder(stakeholder)">Add {{stakeholder}}</button>
+                        <button type="button" style="margin-left: 5px; background-color: rgba(242,173,0,.9);" class="btn btn-info" *ngFor="let stakeholder of stakeholder_keys" (click)="addStakeHolder(stakeholder)">Add {{stakeholder}}</button>
                     </div>
+
+                    <!-- Error feedback -->
                     <div class="error-feedback">
                         <p *ngFor="let error of project_form_errors?.stakeholders">{{error}}</p>
                     </div>
-                    <div class="form-row" *ngFor="let added_stakeholder of added_stakeholders; index as i">
-                        <div class="col-sm-3">
-                            <button type="button" class="btn btn-danger" (click)="removeStakeHolder(i)">Remove</button>
-                            <select class="form-control" (change)="stakeholder_type_selected(i,$event.target.value)" [(ngModel)]="project_stakeholders[i].stakeholder_type">
-                                <option value="" selected disabled>Select Stakeholder</option>
-                                <option *ngFor="let stakeholder_type of added_stakeholder | keyvalue" value="{{stakeholder_type.key}}">{{stakeholder_type.key}}</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-9">
-                            <div class="form-row" *ngFor="let stakeholder of project_stakeholders[i].stakeholder_field_data; index as in">
-                                <div class="row">
-                                    <legend class="col-form-label col-sm-5 pt-0">{{stakeholder.stakeholder_field}}</legend>
-                                    <div class="col-sm-6">
-                                        <input type="text" class="form-input" [(ngModel)]="stakeholder.stakeholder_field_value" placeholder="Enter {{stakeholder.stakeholder_field}}">
-                                    </div>
-                                </div>
+
+                    <br>
+                    
+                    <!-- stakeholder's details-->
+                    <div class="form-row breadcrumb" *ngFor="let added_stakeholder of added_stakeholders; index as i" >
+                        
+                      
+                                <select class="form-control col-md-8" (change)="stakeholder_type_selected(i,$event.target.value)" [(ngModel)]="project_stakeholders[i].stakeholder_type">
+                                    <option value="" selected disabled>Select Stakeholder</option>
+                                    <option *ngFor="let stakeholder_type of added_stakeholder | keyvalue" value="{{stakeholder_type.key}}">{{stakeholder_type.key}}</option>
+                                </select>
+                                <button type="button" class="col-md-3 btn btn-danger" style="margin-left: auto;" (click)="removeStakeHolder(i)">Remove</button>
+                        
+     
+                            <div class="container form-row" *ngFor="let stakeholder of project_stakeholders[i].stakeholder_field_data; index as in">
+                                
+                                    <legend class="col-form-label pt-0">{{stakeholder.stakeholder_field}}</legend>
+                                    <input type="text" class="form-control form-input" [(ngModel)]="stakeholder.stakeholder_field_value" placeholder="Enter {{stakeholder.stakeholder_field}}">
+                                    
+                               
                             </div>
-                        </div>
+                        
                     </div>
+
+
                 </div>
             </div>  
         </div>
     </div>
-    <div class="tab-pane fade" id="evaluation-report" role="tabpanel" aria-labelledby="evaluation-report-tab">
+<!-- Stakeholders tab end -->
 
+
+
+    <!-- Evaluation tab start -->
+    <div class="tab-pane fade" id="evaluation" role="tabpanel" aria-labelledby="evaluation-tab">
+        <h2>Outreach Evaluation</h2>
+		<br>
+		<div class="form-group">
+                    <h6>
+                        Evaluation File: <input type="file" class="btn" name="" /><br>
+                    </h6>
+        </div>
     </div>
+    <!-- Evaluation tab end -->
+
+    <!-- Report tab start -->
+    <div class="tab-pane fade" id="report" role="tabpanel" aria-labelledby="report-tab">
+        <h2>Outreach Generate Report</h2>
+		<br>
+		<div class="form-group">
+                    <h6>
+                        Report File: <input type="file" class="btn" name="" /><br>
+                    </h6>
+        </div>
+    </div>
+    <!-- Report tab end -->
+
+
 </div>
 
+
+<!-- save button start -->
 <div class="col-lg-12">
     <hr>
     <div class="form-group float-right" >
-        <button type="submit" class="btn btn-primary" (click)="save()">Save</button>
+        <button type="submit" class="btn btn-success" (click)="save()">Save</button>
     </div>
 </div>
+<!-- save button end -->
