@@ -96,10 +96,9 @@ export class AdminCommunityDevelopmentCreateComponent implements OnInit {
   }
 
   save(){
-    console.log(this.added_stakeholders);
-    console.log(this.project_stakeholders);
     this.project_form_errors = null;
     let project = this.project_form.value;
+    console.log(project.project_date)
     let project_stakeholders = this.project_stakeholders;
     this.API.post('projects', {
         project_area : project.project_area,

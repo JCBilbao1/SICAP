@@ -37,8 +37,8 @@ class ProjectController extends Controller
         ];
     
         $customMessages = [
-            'project_date.date_format' => 'The date must be in YYYY-MM-DD format.',
-            'project_time.date_format' => 'The time must be in 24 hour & HH:MM format.'
+            'project_date.date_format' => 'The date must be in dd-mm-yyyy format.',
+            'project_time.date_format' => 'The time must be in 24 hour & hh:mm format.'
         ];
     
         $this->validate($request, $rules, $customMessages);
@@ -87,7 +87,7 @@ class ProjectController extends Controller
         ];
     
         $customMessages = [
-            'project_date.date_format' => 'The date must be in YYYY-MM-DD format.',
+            'project_date.date_format' => 'The date must be in dd-mm-yyyy format.',
             'project_time.date_format' => 'The time must be in 24 hour & HH:MM format.'
         ];
     
@@ -151,6 +151,73 @@ class ProjectController extends Controller
             $stakeholders_to_delete = $project->stakeholders()->whereNotIn('id', $project_stakeholder_ids)->delete();
         } else {
             $project->stakeholders()->delete();
+        }
+
+        if(count($product_data['base64Images']) > 0){
+            ini_set('max_execution_time', 180);
+            $date_num = ((int) date("Ymdhis")) - 1;
+            foreach($product_data['base64Images'] as $index => $imageData) {
+                if (isset($imageData['cropped']) && preg_match('/^data:image\/(\w+);base64,/', $imageData['base64'])) {
+                    $image_64 = $imageData['base64'];
+    
+                    $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
+    
+                    $replace = substr($image_64, 0, strpos($image_64, ',')+1); 
+    
+                    // find substring fro replace here eg: data:image/png;base64,
+    
+                    $image = str_replace($replace, '', $image_64); 
+    
+                    $image = str_replace(' ', '+', $image);
+
+                    $image_directory = 'products/' . $old_product_data->slug . '/';
+
+                    $image_id = null;
+                    if(isset($imageData['id']) && !empty($old_product_data->images()->find($imageData['id']))) {
+                        $image_id = $imageData['id'];
+                        $image_name = $imageData['file_name'];
+                        Storage::disk('public')->put($image_directory . $image_name, base64_decode($image));
+                    } else {
+                        do {
+                            $date_num++;
+                            $image_name = $date_num.'.'.$extension;
+                        } while ( Storage::disk('public')->exists($image_directory . $image_name) );
+
+                        Storage::disk('public')->put($image_directory . $image_name, base64_decode($image));
+
+                        $image_id = $old_product_data->images()->create([
+                            'file_name' => $image_name,
+                            'directory' => $image_directory,
+                            'file_type' => $extension,
+                        ])->id;
+                        $product_data['base64Images'][$index]['id'] = $image_id;
+                    }
+
+                    $old_product_data->images()->updateExistingPivot($image_id, [
+                        'order' => $index,
+                    ]);
+                } else {
+                    $image_id = $imageData['id'];
+                    
+                    $old_product_data->images()->updateExistingPivot($image_id, [
+                        'order' => $index,
+                    ]);
+                }
+            }
+
+            $image_ids = collect($product_data['base64Images'])->pluck('id')->toArray();
+            $images_to_delete = $old_product_data->images()->whereNotIn('files.id', $image_ids)->get();
+            foreach($images_to_delete as $image) {
+                Storage::disk('public')->delete($image->directory . $image->file_name);
+                $old_product_data->images()->detach($image->id);
+                File::find($image->id)->delete();
+            }
+        } else {
+            foreach($old_product_data->images as $image) {
+                Storage::disk('public')->delete($image->directory . $image->file_name);
+                $old_product_data->images()->detach($image->id);
+                File::find($image->id)->delete();
+            }
         }
         
         $project->stakeholders = $project->stakeholders()->with('field_data')->get();

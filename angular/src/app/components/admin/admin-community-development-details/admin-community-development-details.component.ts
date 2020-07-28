@@ -91,7 +91,6 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
   }
 
   applyData(data){
-    console.log(data);
     let date = new Date(data.date);
     this.project_form = this.formBuilder.group({
       project_area : data.project_area,
@@ -114,7 +113,6 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
         'stakeholder_type' : stakeholders_data[i].stakeholder_type,
         'stakeholder_field_data' : stakeholders_data[i].field_data
       });
-      console.log(this.added_stakeholders);
     }
   }
 
@@ -179,7 +177,6 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
       'stakeholder_type' : '',
       'stakeholder_field_data' : []
     });
-    console.log(this.project_stakeholders);
   }
 
   removeStakeHolder(index) {
@@ -195,7 +192,6 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
     }
     this.project_stakeholders[index].stakeholder_type = stakeholder_type_key;
     this.project_stakeholders[index].stakeholder_field_data = field_array;
-    console.log(this.project_stakeholders);
   }
 
   openTab(tab) {
@@ -206,7 +202,7 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
       tabcontent[i].style.display = "none";
     }
     
-    tablinks = document.getElementsByClassName("nav-link");
+    tablinks = document.getElementById('pills-tab').getElementsByClassName("nav-link");
     for (i = 0; i < tablinks.length; i++) {
       tablinks[i].className = tablinks[i].className.replace(" active", "");
     }

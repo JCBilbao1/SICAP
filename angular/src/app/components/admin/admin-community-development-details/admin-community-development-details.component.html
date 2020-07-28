@@ -45,10 +45,10 @@
                                                     </label>
                                                 </div>
                                             </div>
+                                            <div class="error-feedback">
+                                                <p *ngFor="let error of project_form_errors?.project_area">{{error}}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="error-feedback">
-                                        <p *ngFor="let error of project_form_errors?.project_area">{{error}}</p>
                                     </div>
                                 </fieldset>
                                 <fieldset class="form-group">
@@ -77,11 +77,11 @@
                                     <div class="row" [ngClass]="{'is-invalid' : project_form?.project_date}">
                                         <legend class="col-form-label col-sm-3 pt-0">Date</legend>
                                         <div class="col-sm-9">
-                                            <input class="form-control form-input" name="project_date" type="text" id="project_date" formControlName="project_date" placeholder="YYYY-MM-DD">
+                                            <input class="form-control form-input" name="project_date" type="date" id="project_date" formControlName="project_date" placeholder="dd-mm-yyy">
+                                            <div class="error-feedback">
+                                                <p *ngFor="let error of project_form_errors?.project_date">{{error}}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="error-feedback">
-                                        <p *ngFor="let error of project_form_errors?.project_date">{{error}}</p>
                                     </div>
                                 </fieldset>
                                 <fieldset class="form-group col-sm-12">
@@ -89,10 +89,10 @@
                                         <legend class="col-form-label col-sm-3 pt-0">Time</legend>
                                         <div class="col-sm-9">
                                             <input class="form-control form-input" name="project_time" type="text" id="project_time" formControlName="project_time" placeholder="24:00">
+                                            <div class="error-feedback">
+                                                <p *ngFor="let error of project_form_errors?.project_time">{{error}}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="error-feedback">
-                                        <p *ngFor="let error of project_form_errors?.project_time">{{error}}</p>
                                     </div>
                                 </fieldset>
                                 <fieldset class="form-group col-sm-12">
@@ -100,10 +100,10 @@
                                         <legend class="col-form-label col-sm-3 pt-0">Place</legend>
                                         <div class="col-sm-9">
                                             <textarea class="form-control form-input" name="project_place" id="project_place" formControlName="project_place" placeholder="Enter Place of Project"></textarea>
+                                            <div class="error-feedback">
+                                                <p *ngFor="let error of project_form_errors?.project_place">{{error}}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="error-feedback">
-                                        <p *ngFor="let error of project_form_errors?.project_place">{{error}}</p>
                                     </div>
                                 </fieldset>
                                 <fieldset class="form-group col-sm-12">
@@ -111,10 +111,10 @@
                                         <legend class="col-form-label col-sm-3 pt-0">Theme/ Event</legend>
                                         <div class="col-sm-9">
                                             <input class="form-control form-input" name="project_theme" type="text" id="project_theme" formControlName="project_theme" placeholder="Enter Theme/ Event of Project">
+                                            <div class="error-feedback">
+                                                <p *ngFor="let error of project_form_errors?.project_theme">{{error}}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="error-feedback">
-                                        <p *ngFor="let error of project_form_errors?.project_theme">{{error}}</p>
                                     </div>
                                 </fieldset>
                             </div>
