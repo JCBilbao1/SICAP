@@ -19,7 +19,7 @@ class CreateProjectFileTable extends Migration
             $table->foreign('project_id')->references('id')->on('projects');
             $table->unsignedBigInteger('file_id');
             $table->foreign('file_id')->references('id')->on('files');
-            $table->text('type');
+            $table->text('type')->nullable();
             $table->timestamps();
         });
     }

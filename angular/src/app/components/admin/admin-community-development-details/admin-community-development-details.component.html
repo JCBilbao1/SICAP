@@ -121,6 +121,15 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- save button start -->
+                <div class="col-lg-12">
+                    <hr>
+                    <div class="form-group float-right" >
+                        <button type="submit" class="btn btn-success" (click)="save()">Save</button>
+                    </div>
+                </div>
+                <!-- save button end -->
             </div>
         </form>
     </div>
@@ -170,6 +179,15 @@
                 </div>
             </div>  
         </div>
+
+        <!-- save button start -->
+        <div class="col-lg-12">
+            <hr>
+            <div class="form-group float-right" >
+                <button type="submit" class="btn btn-success" (click)="save()">Save</button>
+            </div>
+        </div>
+        <!-- save button end -->
     </div>
 <!-- Stakeholders tab end -->
 
@@ -180,9 +198,21 @@
         <h2>Outreach Evaluation</h2>
 		<br>
 		<div class="form-group">
-                    <h6>
-                        Evaluation File: <input type="file" class="btn" name="" /><br>
-                    </h6>
+            <h6>
+                Evaluation File: <input #evaluationFileInput type="file" class="btn" (change)="file_upload($event, 'evaluation')" />
+                <button type="button" class="btn btn-primary" (click)="upload_evaluation()" *ngIf="evaluation_file">Upload</button>
+            </h6>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="card col-sm-6 col-lg-4" *ngFor="let evaluation of evaluation_files">
+                <div class="card-body">
+                    <a href="{{evaluation.url}}" target="_blank">
+                        {{evaluation.original_file_name}}
+                    </a>
+                    <button type="button" class="btn btn-danger btn-sm float-right" (click)="delete_file(evaluation.id)">Delete</button>
+                </div>
+            </div>
         </div>
     </div>
     <!-- Evaluation tab end -->
@@ -192,22 +222,23 @@
         <h2>Outreach Generate Report</h2>
 		<br>
 		<div class="form-group">
-                    <h6>
-                        Report File: <input type="file" class="btn" name="" /><br>
-                    </h6>
+            <h6>
+                Report File: <input #reportFileInput type="file" class="btn" (change)="file_upload($event, 'report')" />
+                <button type="button" class="btn btn-primary" (click)="upload_report()" *ngIf="report_file">Upload</button>
+            </h6>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="card col-sm-6 col-lg-4" *ngFor="let report of report_files">
+                <div class="card-body">
+                    <a href="{{report.url}}" target="_blank">
+                        {{report.original_file_name}}
+                    </a>
+                    <button type="button" class="btn btn-danger btn-sm float-right" (click)="delete_file(report.id)">Delete</button>
+                </div>
+            </div>
         </div>
     </div>
     <!-- Report tab end -->
 
-
 </div>
-
-
-<!-- save button start -->
-<div class="col-lg-12">
-    <hr>
-    <div class="form-group float-right" >
-        <button type="submit" class="btn btn-success" (click)="save()">Save</button>
-    </div>
-</div>
-<!-- save button end -->

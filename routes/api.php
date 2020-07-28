@@ -20,4 +20,6 @@ Route::group(['middleware' => 'api'], function($api){
     Route::apiResource('project-strategies', 'ProjectStrategyController');
     Route::delete('users/delete-temporary/{id}', 'UserController@deleteTemporary');
     Route::delete('projects/delete-temporary/{id}', 'ProjectController@deleteTemporary');
+    Route::post('projects/add-file', 'ProjectController@addFile');
+    Route::delete('projects/{projectId}/remove-file/{fileId}', 'ProjectController@deleteFile');
 });

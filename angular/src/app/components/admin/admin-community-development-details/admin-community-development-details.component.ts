@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 import { APIService } from 'src/app/services/api.service';
 import { FormBuilder } from '@angular/forms';
@@ -63,6 +63,12 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
   ];
   added_stakeholders = []
   project_stakeholders = [];
+  @ViewChild('evaluationFileInput') evaluationFileInput;
+  @ViewChild('reportFileInput') reportFileInput;
+  evaluation_files = [];
+  evaluation_file = null;
+  report_files = [];
+  report_file = null;
 
   constructor(
     private API:APIService,
@@ -91,6 +97,7 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
   }
 
   applyData(data){
+    console.log(data)
     let date = new Date(data.date);
     this.project_form = this.formBuilder.group({
       project_area : data.project_area,
@@ -101,6 +108,8 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
       project_theme : data.theme
     });
     this.loadStakeHolders(data.stakeholders);
+    this.evaluation_files = data.evaluation_files;
+    this.report_files = data.report_files;
   }
 
   loadStakeHolders(stakeholders_data) {
@@ -212,6 +221,52 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
     document.getElementById(tab).className += 'show active';
   }
 
+  file_upload(event, type) {
+    if(type=="evaluation") {
+      this.evaluation_file = event.target.files[0];
+    } else {
+      this.report_file = event.target.files[0];
+    }
+    console.log(event.target.files[0]);
+  }
+
+  upload_evaluation() {
+    const formData = new FormData();
+    formData.append('project_id', this.projectId);
+    formData.append('file', this.evaluation_file);
+    formData.append('type', 'evaluation');
+
+    this.API.post('projects/add-file', formData).subscribe(
+      (data:any) => {
+        console.log(data)
+      },
+      error => this.responseError(error)
+    );
+  }
+
+  upload_report() {
+    const formData = new FormData();
+    formData.append('project_id', this.projectId);
+    formData.append('file', this.report_file);
+    formData.append('type', 'report');
+
+    this.API.post('projects/add-file', formData).subscribe(
+      (data:any) => {
+        console.log(data)
+      },
+      error => this.responseError(error)
+    );
+  }
+
+  delete_file(file_id) {
+    this.API.delete('projects/'+this.projectId+'/remove-file/'+file_id).subscribe(
+      (data:any) => {
+        console.log(data);
+      },
+      error => this.responseError(error)
+    );
+  }
+  
   ngOnInit(): void {
   }
 

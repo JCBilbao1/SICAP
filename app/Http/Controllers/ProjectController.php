@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\Stakeholder;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
@@ -65,6 +66,16 @@ class ProjectController extends Controller
     {
         $project = Project::find($id);
         $project->stakeholders = $project->stakeholders()->with('field_data')->get();
+        // $project->evaluation_files = $project->evaluation_files;
+        $project->evaluation_files = $project->evaluation_files->map(function($file){
+            $file['url'] = url(Storage::url($file->directory . $file->file_name));
+            return $file;
+        });
+        // $project->report_files = $project->report_files;
+        $project->report_files = $project->report_files->map(function($file){
+            $file['url'] = url(Storage::url($file->directory . $file->file_name));
+            return $file;
+        });
         return response()->json($project);
     }
 
@@ -152,73 +163,6 @@ class ProjectController extends Controller
         } else {
             $project->stakeholders()->delete();
         }
-
-        if(count($product_data['base64Images']) > 0){
-            ini_set('max_execution_time', 180);
-            $date_num = ((int) date("Ymdhis")) - 1;
-            foreach($product_data['base64Images'] as $index => $imageData) {
-                if (isset($imageData['cropped']) && preg_match('/^data:image\/(\w+);base64,/', $imageData['base64'])) {
-                    $image_64 = $imageData['base64'];
-    
-                    $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
-    
-                    $replace = substr($image_64, 0, strpos($image_64, ',')+1); 
-    
-                    // find substring fro replace here eg: data:image/png;base64,
-    
-                    $image = str_replace($replace, '', $image_64); 
-    
-                    $image = str_replace(' ', '+', $image);
-
-                    $image_directory = 'products/' . $old_product_data->slug . '/';
-
-                    $image_id = null;
-                    if(isset($imageData['id']) && !empty($old_product_data->images()->find($imageData['id']))) {
-                        $image_id = $imageData['id'];
-                        $image_name = $imageData['file_name'];
-                        Storage::disk('public')->put($image_directory . $image_name, base64_decode($image));
-                    } else {
-                        do {
-                            $date_num++;
-                            $image_name = $date_num.'.'.$extension;
-                        } while ( Storage::disk('public')->exists($image_directory . $image_name) );
-
-                        Storage::disk('public')->put($image_directory . $image_name, base64_decode($image));
-
-                        $image_id = $old_product_data->images()->create([
-                            'file_name' => $image_name,
-                            'directory' => $image_directory,
-                            'file_type' => $extension,
-                        ])->id;
-                        $product_data['base64Images'][$index]['id'] = $image_id;
-                    }
-
-                    $old_product_data->images()->updateExistingPivot($image_id, [
-                        'order' => $index,
-                    ]);
-                } else {
-                    $image_id = $imageData['id'];
-                    
-                    $old_product_data->images()->updateExistingPivot($image_id, [
-                        'order' => $index,
-                    ]);
-                }
-            }
-
-            $image_ids = collect($product_data['base64Images'])->pluck('id')->toArray();
-            $images_to_delete = $old_product_data->images()->whereNotIn('files.id', $image_ids)->get();
-            foreach($images_to_delete as $image) {
-                Storage::disk('public')->delete($image->directory . $image->file_name);
-                $old_product_data->images()->detach($image->id);
-                File::find($image->id)->delete();
-            }
-        } else {
-            foreach($old_product_data->images as $image) {
-                Storage::disk('public')->delete($image->directory . $image->file_name);
-                $old_product_data->images()->detach($image->id);
-                File::find($image->id)->delete();
-            }
-        }
         
         $project->stakeholders = $project->stakeholders()->with('field_data')->get();
 
@@ -237,6 +181,46 @@ class ProjectController extends Controller
     }
 
     public function deleteTemporary($id){
+        $project = Project::findorfail($id);
+        $project->delete();
+        return response()->json(['message'=>'Successfuly Deleted!']);
+    }
+
+    public function addFile(Request $request) {
+        $file = $request->file('file');
+        $type = $request['type'];
+        $extension = $file->getClientOriginalExtension();
+        $project_id = $request['project_id'];
+        $project = Project::find($project_id);
+
+        ini_set('max_execution_time', 180);
+        $date_num = ((int) date("Ymdhis")) - 1;
+        $file_directory = $type . 's/' . $project->id . '/';
+
+        $file_name = null;
+        do {
+            $date_num++;
+            $file_name = $date_num.'.'.$extension;
+        } while ( Storage::disk('public')->exists($file_directory . $file_name) );
+
+        Storage::disk('public')->put($file_directory . $file_name, file_get_contents($file));
+
+        $file_id = $project->files()->create([
+            'original_file_name' => $file->getClientOriginalName(),
+            'file_name' => $file_name,
+            'directory' => $file_directory,
+            'file_type' => $extension,
+        ])->id;
+
+        $project->files()->updateExistingPivot($file_id, [
+            'type' => $type,
+        ]);
+
+        return response()->json(['status'=>'File Uploaded!']);
+    }
+
+    public function deleteFile($projectId, $fileId){
+        return $projectId + $fileId;
         $project = Project::findorfail($id);
         $project->delete();
         return response()->json(['message'=>'Successfuly Deleted!']);

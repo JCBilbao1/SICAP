@@ -16,5 +16,20 @@ class Project extends Model
     {
         return $this->hasMany('App\Models\Stakeholder');
     }
+
+    public function files()
+    {
+        return $this->belongsToMany('App\Models\File' , 'project_file')->withTimeStamps()->latest();
+    }
+
+    public function evaluation_files()
+    {
+        return $this->belongsToMany('App\Models\File' , 'project_file')->wherePivot('type', 'evaluation')->withTimeStamps()->latest();
+    }
+
+    public function report_files()
+    {
+        return $this->belongsToMany('App\Models\File', 'project_file')->wherePivot('type', 'report')->withTimeStamps()->latest();
+    }
     
 }
