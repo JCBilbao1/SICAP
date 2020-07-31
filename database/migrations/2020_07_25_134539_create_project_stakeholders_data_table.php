@@ -14,7 +14,7 @@ class CreateProjectStakeholdersDataTable extends Migration
     public function up()
     {
         Schema::create('project_stakeholders_data', function (Blueprint $table) {
-            $table->bigIncrements();
+            $table->bigIncrements('id');
             $table->unsignedBigInteger('project_stakeholder_id');
             $table->foreign('project_stakeholder_id')->references('id')->on('project_stakeholders')->onDelete('cascade');
             $table->text('stakeholder_field');
