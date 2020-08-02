@@ -96,6 +96,7 @@ export class AdminCommunityDevelopmentCreateComponent implements OnInit {
   }
 
   save(){
+    this.showLoading('Saving', 'Please wait...');
     this.project_form_errors = null;
     let project = this.project_form.value;
     console.log(project.project_date)
@@ -131,7 +132,6 @@ export class AdminCommunityDevelopmentCreateComponent implements OnInit {
     console.error(error)
     this.project_form_errors = error.error.errors;
     Swal.fire({
-      position: 'top-end',
       icon: 'error',
       title: 'There was an error!',
       showConfirmButton: false,
@@ -161,6 +161,17 @@ export class AdminCommunityDevelopmentCreateComponent implements OnInit {
     }
     this.project_stakeholders[index].stakeholder_type = stakeholder_type_key;
     this.project_stakeholders[index].stakeholder_field_data = field_array;
+  }
+
+  showLoading(title, message){
+    Swal.fire({
+      title: title,
+      html: message,
+      allowOutsideClick: false,
+      onBeforeOpen: () => {
+        Swal.showLoading();
+      },
+    });
   }
 
   ngOnInit(): void {

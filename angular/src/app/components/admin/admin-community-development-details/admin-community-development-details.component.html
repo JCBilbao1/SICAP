@@ -35,6 +35,22 @@
                             <div class="form-row">
                                 <fieldset class="form-group">
                                     <div class="row" [ngClass]="{'is-invalid' : project_form?.project_area}">
+                                        <legend class="col-form-label col-sm-3 pt-0">Status</legend>
+                                        <div class="col-sm-9">
+                                            <select name="project_status" id="project_status" class="form-control" [ngClass]="{'is-invalid' : project_form?.project_status}" formControlName="project_status" placeholder="Project Status">
+                                                <option value="" selected disabled>Project Status</option>
+                                                <option value="null">PENDING</option>
+                                                <option value="1">DONE</option>
+                                                <option value="0">CANCELLED</option>
+                                            </select>
+                                            <div class="error-feedback">
+                                                <p *ngFor="let error of project_form_errors?.project_strategy">{{error}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="form-group">
+                                    <div class="row" [ngClass]="{'is-invalid' : project_form?.project_area}">
                                         <legend class="col-form-label col-sm-3 pt-0">Project Area</legend>
                                         <div class="col-sm-9">
                                             <div class="row">
@@ -125,7 +141,7 @@
                 <!-- save button start -->
                 <div class="col-lg-12">
                     <hr>
-                    <div class="form-group float-right" >
+                    <div class="float-right" >
                         <button type="submit" class="btn btn-success" (click)="save()">Save</button>
                     </div>
                 </div>
@@ -142,52 +158,215 @@
             <div class="card">
                 <div class="card-body"> 
 
-                    <!-- add buttons -->
-                    <div class="form-row" [ngClass]="{'is-invalid' : stakeholders}">
-                        <button type="button" style="margin-left: 5px; background-color: rgba(242,173,0,.9);" class="btn btn-info" *ngFor="let stakeholder of stakeholder_keys" (click)="addStakeHolder(stakeholder)">Add {{stakeholder}}</button>
-                    </div>
-
                     <!-- Error feedback -->
                     <div class="error-feedback">
                         <p *ngFor="let error of project_form_errors?.stakeholders">{{error}}</p>
                     </div>
 
-                    <br>
-                    
-                    <!-- stakeholder's details-->
-                    <div class="form-row breadcrumb" *ngFor="let added_stakeholder of added_stakeholders; index as i" >
-                        
-                      
-                                <select class="form-control col-md-8" (change)="stakeholder_type_selected(i,$event.target.value)" [(ngModel)]="project_stakeholders[i].stakeholder_type">
-                                    <option value="" selected disabled>Select Stakeholder</option>
-                                    <option *ngFor="let stakeholder_type of added_stakeholder | keyvalue" value="{{stakeholder_type.key}}">{{stakeholder_type.key}}</option>
-                                </select>
-                                <button type="button" class="col-md-3 btn btn-danger" style="margin-left: auto;" (click)="removeStakeHolder(i)">Remove</button>
-                        
-     
-                            <div class="container form-row" *ngFor="let stakeholder of project_stakeholders[i].stakeholder_field_data; index as in">
-                                
-                                    <legend class="col-form-label pt-0">{{stakeholder.stakeholder_field}}</legend>
-                                    <input type="text" class="form-control form-input" [(ngModel)]="stakeholder.stakeholder_field_value" placeholder="Enter {{stakeholder.stakeholder_field}}">
-                                    
-                               
+                    <ul class="nav nav-pills mb-3" id="stakeholder-pills-tab" role="tablist">
+                        <!-- JRU -->
+                        <li class="nav-item">
+                            <a class="nav-link active" id="jru-tab" [routerLink]="" (click)="openStakeHolderTab('jru')" style="background-color: #152d65;color:white; ">JRU</a>
+                        </li>
+                        <!-- Community -->
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="" id="community-tab" (click)="openStakeHolderTab('community')" style="background-color: #152d65;color:white;margin-left:10px;">Community</a>
+                        </li>
+                        <!-- Others -->
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="" id="others-tab" (click)="openStakeHolderTab('others')" style="background-color: #152d65;color:white;margin-left:10px;">Others</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="stakeholders-pills-tabContent">
+                        <!-- JRU tab start -->
+                        <div class="stakeholder-tab-pane show active" id="jru" role="tabpanel" aria-labelledby="jru-tab">
+                            <div class="form-row">
+                                <button type="button" style="margin-left: 5px; background-color: rgba(242,173,0,.9);" class="btn btn-info" (click)="addStakeHolder(stakeholder_add, 'JRU')">Add JRU</button>
                             </div>
-                        
+                            <div class="table-responsive" style="margin-top: 10px;">
+                                <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table row-border hover">
+                                    <thead style="background-color: #f9bd3b;">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let stakeholder of jru_stakeholders;index as i">
+                                            <td>{{stakeholder.field_data[0].stakeholder_field_value}}</td>
+                                            <td>{{stakeholder.stakeholder_type}}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary" (click)="viewStakeholder(stakeholder_edit, stakeholder)">
+                                                    Edit
+                                                </button>
+                                                <button class="btn btn-sm btn-danger" (click)="removeStakeholder(stakeholder)">
+                                                    Remove
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- JRU tab end -->
+
+                        <!-- Community tab start -->
+                        <div class="stakeholder-tab-pane fade" id="community" role="tabpanel" aria-labelledby="community-tab" style="display: none;">
+                            <div class="form-row">
+                                <button type="button" style="margin-left: 5px; background-color: rgba(242,173,0,.9);" class="btn btn-info" (click)="addStakeHolder(stakeholder_add, 'Community')">Add Community</button>
+                            </div>
+                            <div class="table-responsive" style="margin-top: 10px;">
+                                <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table row-border hover">
+                                    <thead style="background-color: #f9bd3b;">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let stakeholder of community_stakeholders;index as i">
+                                            <td>{{stakeholder.field_data[0].stakeholder_field_value}}</td>
+                                            <td>{{stakeholder.stakeholder_type}}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary" (click)="viewStakeholder(stakeholder_edit, stakeholder)">
+                                                    Edit
+                                                </button>
+                                                <button class="btn btn-sm btn-danger" (click)="removeStakeholder(stakeholder)">
+                                                    Remove
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Community tab end -->
+
+                        <!-- Others tab start -->
+                        <div class="stakeholder-tab-pane fade" id="others" role="tabpanel" aria-labelledby="others-tab" style="display: none;">
+                            <div class="form-row">
+                                <button type="button" style="margin-left: 5px; background-color: rgba(242,173,0,.9);" class="btn btn-info" (click)="addStakeHolder(stakeholder_add, 'Other')">Add Others</button>
+                            </div>
+                            <div class="table-responsive" style="margin-top: 10px;">
+                                <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table row-border hover">
+                                    <thead style="background-color: #f9bd3b;">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let stakeholder of other_stakeholders;index as i">
+                                            <td>{{stakeholder.field_data[0].stakeholder_field_value}}</td>
+                                            <td>{{stakeholder.stakeholder_type}}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary" (click)="viewStakeholder(stakeholder_edit, stakeholder)">
+                                                    Edit
+                                                </button>
+                                                <button class="btn btn-sm btn-danger" (click)="removeStakeholder(stakeholder)">
+                                                    Remove
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Others tab end -->
                     </div>
 
+                    <ng-template #stakeholder_add>
+                        <div class="form-row breadcrumb" style="padding: 1rem;margin: 0;">
+
+                            <div class="form-row col-lg-12">
+                                <select class="form-control col-md-12" (change)="stakeholder_type_selected('add', added_stakeholder.stakeholder, $event.target.value)" [(ngModel)]="added_stakeholder.stakeholder_type">
+                                    <option value="" selected disabled>Select Stakeholder</option>
+                                    <option *ngFor="let stakeholder_type of stakeholders[added_stakeholder?.stakeholder] | keyvalue" value="{{stakeholder_type.key}}">{{stakeholder_type.key}}</option>
+                                </select>
+                            </div>
+         
+                            <div class="col-lg-12">
+                                <hr>
+                            </div>
+
+                            <div class="container form-row col-lg-12" *ngFor="let stakeholder of added_stakeholder?.field_data; index as in">
+                                <legend class="col-form-label pt-0">{{stakeholder.stakeholder_field}}</legend>
+                                <input type="text" class="form-control form-input" [(ngModel)]="stakeholder.stakeholder_field_value" placeholder="Enter {{stakeholder.stakeholder_field}}">
+                            </div>
+                            
+                            <div class="col-lg-12">
+                                <hr>
+                                <div class="float-right" >
+                                    <button type="submit" class="btn btn-danger" (click)="stakeholderAddModal.hide()" style="margin-right: 1rem;">Cancel</button>
+                                    <button type="submit" class="btn btn-success" (click)="saveStakeholder()">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #stakeholder_edit>
+                        <div class="form-row breadcrumb" style="padding: 1rem;margin: 0;">
+
+                            <div class="form-row col-lg-12">
+                                <select class="form-control col-md-8" (change)="stakeholder_type_selected('edit', stakeholder_for_edit.stakeholder, $event.target.value)" [(ngModel)]="stakeholder_for_edit.stakeholder_type">
+                                    <option value="" selected disabled>Select Stakeholder</option>
+                                    <option *ngFor="let stakeholder_type of stakeholders[stakeholder_for_edit?.stakeholder] | keyvalue" value="{{stakeholder_type.key}}">{{stakeholder_type.key}}</option>
+                                </select>
+                                <button type="button" class="col-md-3 btn btn-danger" style="margin-left: auto;" (click)="removeStakeHolder(stakeholder_for_edit?.id)">Remove</button>
+                            </div>
+         
+                            <div class="col-lg-12">
+                                <hr>
+                            </div>
+
+                            <div class="container form-row col-lg-12" *ngFor="let stakeholder of stakeholder_for_edit?.field_data; index as in">
+                                <legend class="col-form-label pt-0">{{stakeholder.stakeholder_field}}</legend>
+                                <input type="text" class="form-control form-input" [(ngModel)]="stakeholder.stakeholder_field_value" placeholder="Enter {{stakeholder.stakeholder_field}}">
+                            </div>
+                            
+                            <div class="col-lg-12">
+                                <hr>
+                                <div class="float-right" >
+                                    <button type="submit" class="btn btn-danger" (click)="stakeholderEditModal.hide()" style="margin-right: 1rem;">Cancel</button>
+                                    <button type="submit" class="btn btn-success" (click)="updateStakeholder()">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+
+                    <!-- add buttons -->
+                    <!-- <div class="form-row" [ngClass]="{'is-invalid' : stakeholders}">
+                        <button type="button" style="margin-left: 5px; background-color: rgba(242,173,0,.9);" class="btn btn-info" *ngFor="let stakeholder of stakeholder_keys" (click)="addStakeHolder(stakeholder)">Add {{stakeholder}}</button>
+                    </div> -->
+
+                    <!-- <br> -->
+                    
+                    <!-- stakeholder's details-->
+                    <!-- <div class="form-row breadcrumb" *ngFor="let added_stakeholder of added_stakeholders; index as i" >
+
+                        <select class="form-control col-md-8" (change)="stakeholder_type_selected(i,$event.target.value)" [(ngModel)]="project_stakeholders[i].stakeholder_type">
+                            <option value="" selected disabled>Select Stakeholder</option>
+                            <option *ngFor="let stakeholder_type of added_stakeholder | keyvalue" value="{{stakeholder_type.key}}">{{stakeholder_type.key}}</option>
+                        </select>
+                        <button type="button" class="col-md-3 btn btn-danger" style="margin-left: auto;" (click)="removeStakeHolder(i)">Remove</button>
+                        
+     
+                        <div class="container form-row" *ngFor="let stakeholder of project_stakeholders[i].stakeholder_field_data; index as in">
+                            
+                            <legend class="col-form-label pt-0">{{stakeholder.stakeholder_field}}</legend>
+                            <input type="text" class="form-control form-input" [(ngModel)]="stakeholder.stakeholder_field_value" placeholder="Enter {{stakeholder.stakeholder_field}}">
+                            
+                        </div>
+                        
+                    </div> -->
 
                 </div>
             </div>  
         </div>
-
-        <!-- save button start -->
-        <div class="col-lg-12">
-            <hr>
-            <div class="form-group float-right" >
-                <button type="submit" class="btn btn-success" (click)="save()">Save</button>
-            </div>
-        </div>
-        <!-- save button end -->
     </div>
 <!-- Stakeholders tab end -->
 

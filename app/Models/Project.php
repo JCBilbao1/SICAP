@@ -9,12 +9,27 @@ class Project extends Model
     protected $table = 'projects';
     
     protected $fillable = [
-        'project_area', 'project_strategy', 'place', 'theme', 'date',
+        'project_area', 'project_strategy', 'place', 'theme', 'date', 'status',
     ];
 
     public function stakeholders()
     {
         return $this->hasMany('App\Models\Stakeholder');
+    }
+
+    public function jru_stakeholders()
+    {
+        return $this->hasMany('App\Models\Stakeholder')->where('stakeholder', 'JRU');
+    }
+
+    public function community_stakeholders()
+    {
+        return $this->hasMany('App\Models\Stakeholder')->where('stakeholder', 'Community');
+    }
+
+    public function other_stakeholders()
+    {
+        return $this->hasMany('App\Models\Stakeholder')->where('stakeholder', 'Other');
     }
 
     public function files()

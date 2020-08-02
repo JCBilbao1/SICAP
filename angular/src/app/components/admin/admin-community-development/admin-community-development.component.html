@@ -1,37 +1,46 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2">
-    <h2>JRU - Community Development Program</h2>
+  <h2>JRU - Community Development Program</h2>
+</div>
+<div class="row tools">
+  <div class="col-lg-12" >
+    <button routerLink="/community-development/create" type="button" class="btn btn-primary float-right" style="background-color: #152d65;">Create Outreach</button>
   </div>
-  <div class="row tools">
-    <div class="col-lg-12" >
-      <button routerLink="/community-development/create" type="button" class="btn btn-primary float-right" style="background-color: #152d65;">Create Outreach</button>
-    </div>
-  </div>
-  <div class="table-responsive" style="margin-top: 10px;">
-    <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table row-border hover">
-      <thead style="background-color: #f9bd3b;">
-        <tr>
-          <th>ID</th>
-          <th>Area</th>
-          <th>Theme</th>
-          <th>Created At</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of programs">
-          <td>{{item.id}}</td>
-          <td>{{item.project_area}}</td>
-          <td>{{item.theme}} </td>
-          <td>{{item.created_at | date : 'longDate'}}</td>
-          <td>
-            <button class="btn btn-sm btn-primary" routerLink="/community-development/{{item.id}}">
-              View
-            </button>
-            <!-- <button class="btn btn-sm btn-danger"  style="margin-left:5px" (click)="decline(item)">
-                delete
-            </button> -->
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+</div>
+<div class="table-responsive" style="margin-top: 10px;">
+  <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table row-border hover">
+    <thead style="background-color: #f9bd3b;">
+      <tr>
+        <th>ID</th>
+        <th>Area</th>
+        <th>Theme</th>
+        <th>Status</th>
+        <th>Created At</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of programs">
+        <td>{{item.id}}</td>
+        <td>{{item.project_area}}</td>
+        <td>{{item.theme}}</td>
+        <td>
+          <span *ngIf="item.status == null" class="badge badge-secondary">PENDING</span>
+          <span *ngIf="item.status == 1" class="badge badge-success">DONE</span>
+          <span *ngIf="item.status == 0" class="badge badge-danger">CANCELLED</span>
+        </td>
+        <td>{{item.created_at | date : 'longDate'}}</td>
+        <td>
+          <button class="btn btn-sm btn-primary" routerLink="/community-development/{{item.id}}">
+            View
+          </button>
+          <button class="btn btn-sm btn-success" (click)="markAsDone(item.id)">
+            Done
+          </button>
+          <button class="btn btn-sm btn-danger" (click)="markAsCancelled(item.id)">
+            Cancel
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

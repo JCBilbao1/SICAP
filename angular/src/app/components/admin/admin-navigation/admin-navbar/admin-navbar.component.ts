@@ -11,6 +11,7 @@ import { TokenService } from 'src/app/services/token.service';
 })
 export class AdminNavbarComponent implements OnInit {
   public loggedIn :boolean;
+  user = null;
 
   constructor(
     private API: APIService,
@@ -18,14 +19,15 @@ export class AdminNavbarComponent implements OnInit {
     private Auth: AuthService,
     private Token: TokenService
   ) {
-    this.API.post('users/me','').subscribe(
+    this.API.post('auth/me','').subscribe(
         data => this.successResponse(data),
         error => this.errorResponse(error)
     );
   }
   
   successResponse(data){
-    if(!data.admin){
+    this.user = data.user;
+    if( this.user && this.user.role.slug != 'admin'){
       this.Auth.changeAuthStatus(false);
       this.Token.remove();
       this.router.navigateByUrl('/login');
@@ -34,6 +36,11 @@ export class AdminNavbarComponent implements OnInit {
 
   errorResponse(error){
     console.error(error);
+    if(error.status == 401){
+      this.Auth.changeAuthStatus(false);
+      this.Token.remove();
+      this.router.navigateByUrl('/login');
+    }
   }
 
   logout(e: MouseEvent){

@@ -18,12 +18,11 @@ export class AdminSidebarComponent implements OnInit {
   }
 
   successResponse(data){
-    console.log(data);
-    this.hasRole = data.role.slug;
+    this.hasRole = data.user.slug;
   }
 
   errorResponse(error){
-    console.log(error)
+    console.error(error)
   }
 
   ngOnInit(): void {

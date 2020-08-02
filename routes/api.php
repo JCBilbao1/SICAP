@@ -22,4 +22,8 @@ Route::group(['middleware' => 'api'], function($api){
     Route::delete('projects/delete-temporary/{id}', 'ProjectController@deleteTemporary');
     Route::post('projects/add-file', 'ProjectController@addFile');
     Route::delete('projects/{projectId}/remove-file/{fileId}', 'ProjectController@deleteFile');
+    Route::put('projects/change-status/{id}', 'ProjectController@changeStatus');
+    Route::post('projects/{id}/stakeholder', 'ProjectController@addStakeholder');
+    Route::put('projects/stakeholder/{id}', 'ProjectController@updateStakeholder');
+    Route::delete('projects/stakeholder/{id}', 'ProjectController@removeStakeholder');
 });

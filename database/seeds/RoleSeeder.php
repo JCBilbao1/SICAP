@@ -13,6 +13,6 @@ class RoleSeeder extends Seeder
     public function run()
     {
         //this will create all roles
-        Role::create(['slug' => 'admin', 'name' => 'Administrator']);
+        Role::create(['slug' => 'admin', 'name' => 'CDO-Coordinator']);
     }
 }

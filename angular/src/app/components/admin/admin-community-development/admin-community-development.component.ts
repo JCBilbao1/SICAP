@@ -32,21 +32,12 @@ export class AdminCommunityDevelopmentComponent implements OnInit {
   }
 
   applyData(data){
-    data.forEach(function(obj){
-      console.log(obj);
-    });
-    console.log(data);
     this.programs = data;
     this.dtTrigger.next();
   }
 
   handleError(error){
-    console.log(error)
-  }
-
-  decline(data){
-    event.preventDefault();
-    this.delete(data.id);
+    console.error(error)
   }
 
   delete(id){
@@ -66,18 +57,46 @@ export class AdminCommunityDevelopmentComponent implements OnInit {
   }
 
   responseError(error){
-    let error_message = ['Kindly screenshot and send this to our support!',('<hr><br>'+ error.message +'<br><hr>'),'Thank you!'];
+    console.error(error);
+    let error_message = [('<hr><br>'+ error.message +'<br><hr>')];
 
     Swal.fire({
-      'title':'There was an error happen!',
+      'title':'Something went wrong!',
       'icon':'error',
       'html': error_message.join('<br>')
     });
   }
 
+  markAsDone(id) {
+    this.showLoading('Updating', 'Please wait...');
+    this.API.put(`projects/change-status/${id}}`, {status:1}).subscribe(
+      data => this.responseSuccess(data),
+      error => this.responseError(error)
+    )
+  }
+
+  markAsCancelled(id) {
+    this.showLoading('Updating', 'Please wait...');
+    this.API.put(`projects/change-status/${id}}`, {status:0}).subscribe(
+      data => this.responseSuccess(data),
+      error => this.responseError(error)
+    )
+  }
+
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event
     this.dtTrigger.unsubscribe();
+  }
+
+  showLoading(title, message){
+    Swal.fire({
+      title: title,
+      html: message,
+      allowOutsideClick: false,
+      onBeforeOpen: () => {
+        Swal.showLoading();
+      },
+    });
   }
 
 }

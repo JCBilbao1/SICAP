@@ -65,13 +65,14 @@ class ProjectController extends Controller
     public function show($id)
     {
         $project = Project::find($id);
-        $project->stakeholders = $project->stakeholders()->with('field_data')->get();
-        // $project->evaluation_files = $project->evaluation_files;
+        $project->jru_stakeholders = $project->jru_stakeholders()->with('field_data')->get();
+        $project->community_stakeholders = $project->community_stakeholders()->with('field_data')->get();
+        $project->other_stakeholders = $project->other_stakeholders()->with('field_data')->get();
+
         $project->evaluation_files = $project->evaluation_files->map(function($file){
             $file['url'] = url(Storage::url($file->directory . $file->file_name));
             return $file;
         });
-        // $project->report_files = $project->report_files;
         $project->report_files = $project->report_files->map(function($file){
             $file['url'] = url(Storage::url($file->directory . $file->file_name));
             return $file;
@@ -111,60 +112,71 @@ class ProjectController extends Controller
         $project->place = $request['project_place'];
         $project->theme = $request['project_theme'];
         $project->date = $date;
+        $project->status = ($request['project_status'] == 'null') ? null : $request['project_status'];
         $project->save();
 
-        $stakeholders = $request['stakeholders'];
-        if( $stakeholders && count($stakeholders) > 0){
-            foreach($stakeholders as $index => $stakeholder) {
-                if(isset($stakeholder['id']) && !empty($project->stakeholders()->find($stakeholder['id']))) {
-                    $old_stakeholder = $project->stakeholders()->find($stakeholder['id']);
-                    if($stakeholder['stakeholder'] == $old_stakeholder->stakeholder) {
-                        if($stakeholder['stakeholder_type'] == $old_stakeholder->stakeholder_type) {
-                            foreach($stakeholder['stakeholder_field_data'] as $field_data) {
-                                $stakeholder_field_data = [
-                                    'stakeholder_field_value' => $field_data['stakeholder_field_value']
-                                ];
-                                $old_stakeholder->field_data()->find($field_data['id'])->update($stakeholder_field_data);
-                            }
-                        }
-                    } else {
-                        $old_stakeholder->field_data()->delete();
-                        $old_stakeholder->update([
-                            'stakeholder' => $stakeholder['stakeholder'],
-                            'stakeholder_type' => $stakeholder['stakeholder_type'],
-                        ]);
-                        foreach($stakeholder['stakeholder_field_data'] as $field_data) {
-                            $old_stakeholder->field_data()->insert([
-                                'project_stakeholder_id' => $old_stakeholder->id,
-                                'stakeholder_field' => $field_data['stakeholder_field'],
-                                'stakeholder_field_value' => $field_data['stakeholder_field_value']
-                            ]);
-                        }
-                    }
-                } else {
-                    $new_stakeholder = new Stakeholder;
-                    $new_stakeholder->project_id = $project->id;
-                    $new_stakeholder->stakeholder = $stakeholder['stakeholder'];
-                    $new_stakeholder->stakeholder_type = $stakeholder['stakeholder_type'];
-                    $new_stakeholder->save();
-                    foreach($stakeholder['stakeholder_field_data'] as $field_data) {
-                        $stakeholder_field_data = [
-                            'project_stakeholder_id' => $new_stakeholder->id,
-                            'stakeholder_field' => $field_data['stakeholder_field'],
-                            'stakeholder_field_value' => $field_data['stakeholder_field_value']
-                        ];
-                        $new_stakeholder->field_data()->insert($stakeholder_field_data);
-                    }
-                    $stakeholders[$index]['id'] = $new_stakeholder->id;
-                }
-            }
-            $project_stakeholder_ids = collect($stakeholders)->pluck('id')->toArray();
-            $stakeholders_to_delete = $project->stakeholders()->whereNotIn('id', $project_stakeholder_ids)->delete();
-        } else {
-            $project->stakeholders()->delete();
-        }
+        // $stakeholders = $request['stakeholders'];
+        // if( $stakeholders && count($stakeholders) > 0){
+        //     foreach($stakeholders as $index => $stakeholder) {
+        //         if(isset($stakeholder['id']) && !empty($project->stakeholders()->find($stakeholder['id']))) {
+        //             $old_stakeholder = $project->stakeholders()->find($stakeholder['id']);
+        //             if($stakeholder['stakeholder'] == $old_stakeholder->stakeholder) {
+        //                 if($stakeholder['stakeholder_type'] == $old_stakeholder->stakeholder_type) {
+        //                     foreach($stakeholder['stakeholder_field_data'] as $field_data) {
+        //                         $stakeholder_field_data = [
+        //                             'stakeholder_field_value' => $field_data['stakeholder_field_value']
+        //                         ];
+        //                         $old_stakeholder->field_data()->find($field_data['id'])->update($stakeholder_field_data);
+        //                     }
+        //                 }
+        //             } else {
+        //                 $old_stakeholder->field_data()->delete();
+        //                 $old_stakeholder->update([
+        //                     'stakeholder' => $stakeholder['stakeholder'],
+        //                     'stakeholder_type' => $stakeholder['stakeholder_type'],
+        //                 ]);
+        //                 foreach($stakeholder['stakeholder_field_data'] as $field_data) {
+        //                     $old_stakeholder->field_data()->insert([
+        //                         'project_stakeholder_id' => $old_stakeholder->id,
+        //                         'stakeholder_field' => $field_data['stakeholder_field'],
+        //                         'stakeholder_field_value' => $field_data['stakeholder_field_value']
+        //                     ]);
+        //                 }
+        //             }
+        //         } else {
+        //             $new_stakeholder = new Stakeholder;
+        //             $new_stakeholder->project_id = $project->id;
+        //             $new_stakeholder->stakeholder = $stakeholder['stakeholder'];
+        //             $new_stakeholder->stakeholder_type = $stakeholder['stakeholder_type'];
+        //             $new_stakeholder->save();
+        //             foreach($stakeholder['stakeholder_field_data'] as $field_data) {
+        //                 $stakeholder_field_data = [
+        //                     'project_stakeholder_id' => $new_stakeholder->id,
+        //                     'stakeholder_field' => $field_data['stakeholder_field'],
+        //                     'stakeholder_field_value' => $field_data['stakeholder_field_value']
+        //                 ];
+        //                 $new_stakeholder->field_data()->insert($stakeholder_field_data);
+        //             }
+        //             $stakeholders[$index]['id'] = $new_stakeholder->id;
+        //         }
+        //     }
+        //     $project_stakeholder_ids = collect($stakeholders)->pluck('id')->toArray();
+        //     $stakeholders_to_delete = $project->stakeholders()->whereNotIn('id', $project_stakeholder_ids)->delete();
+        // } else {
+        //     $project->stakeholders()->delete();
+        // }
         
-        $project->stakeholders = $project->stakeholders()->with('field_data')->get();
+        $project->jru_stakeholders = $project->jru_stakeholders()->with('field_data')->get();
+        $project->community_stakeholders = $project->community_stakeholders()->with('field_data')->get();
+        $project->other_stakeholders = $project->other_stakeholders()->with('field_data')->get();
+        $project->evaluation_files = $project->evaluation_files->map(function($file){
+            $file['url'] = url(Storage::url($file->directory . $file->file_name));
+            return $file;
+        });
+        $project->report_files = $project->report_files->map(function($file){
+            $file['url'] = url(Storage::url($file->directory . $file->file_name));
+            return $file;
+        });
 
         return response()->json(['status'=>'Project Updated!', 'data'=>$project]);
     }
@@ -216,13 +228,132 @@ class ProjectController extends Controller
             'type' => $type,
         ]);
 
-        return response()->json(['status'=>'File Uploaded!']);
+        $project->jru_stakeholders = $project->jru_stakeholders()->with('field_data')->get();
+        $project->community_stakeholders = $project->community_stakeholders()->with('field_data')->get();
+        $project->other_stakeholders = $project->other_stakeholders()->with('field_data')->get();
+        $project->evaluation_files = $project->evaluation_files->map(function($file){
+            $file['url'] = url(Storage::url($file->directory . $file->file_name));
+            return $file;
+        });
+        $project->report_files = $project->report_files->map(function($file){
+            $file['url'] = url(Storage::url($file->directory . $file->file_name));
+            return $file;
+        });
+        return response()->json(['status'=>'File Uploaded!', 'data'=>$project]);
     }
 
     public function deleteFile($projectId, $fileId){
-        return $projectId + $fileId;
-        $project = Project::findorfail($id);
-        $project->delete();
-        return response()->json(['message'=>'Successfuly Deleted!']);
+        $project = Project::find($projectId);
+        $file = $project->files()->where('files.id', $fileId)->first();
+        Storage::disk('public')->delete($file->directory . $file->file_name);
+        $project->files()->detach($fileId);
+        $project->files()->where('files.id', $fileId)->delete();
+
+        $project->jru_stakeholders = $project->jru_stakeholders()->with('field_data')->get();
+        $project->community_stakeholders = $project->community_stakeholders()->with('field_data')->get();
+        $project->other_stakeholders = $project->other_stakeholders()->with('field_data')->get();
+        $project->evaluation_files = $project->evaluation_files->map(function($file){
+            $file['url'] = url(Storage::url($file->directory . $file->file_name));
+            return $file;
+        });
+        $project->report_files = $project->report_files->map(function($file){
+            $file['url'] = url(Storage::url($file->directory . $file->file_name));
+            return $file;
+        });
+        return response()->json(['status'=>'File Deleted!', 'data'=>$project]);
+    }
+
+    public function changeStatus(Request $request, $id){
+        $project = Project::find($id);
+        $project->status = $request['status'];
+        $project->save();
+
+        return response()->json(['message'=>'Outreach updated!', $request]);
+    }
+
+    public function addStakeholder(Request $request, $id)
+    {
+        $rules = [
+            'stakeholder' => 'required',
+            'stakeholder_type' => 'required',
+            'field_data.*.*' => 'required',
+        ];
+    
+        $this->validate($request, $rules);
+
+        $new_stakeholder = new Stakeholder;
+        $new_stakeholder->project_id = $id;
+        $new_stakeholder->stakeholder = $request['stakeholder'];
+        $new_stakeholder->stakeholder_type = $request['stakeholder_type'];
+        $new_stakeholder->save();
+        foreach($request['field_data'] as $field_data) {
+            $stakeholder_field_data = [
+                'project_stakeholder_id' => $new_stakeholder->id,
+                'stakeholder_field' => $field_data['stakeholder_field'],
+                'stakeholder_field_value' => $field_data['stakeholder_field_value']
+            ];
+            $new_stakeholder->field_data()->insert($stakeholder_field_data);
+        }
+
+        $project = Project::find($id);
+        $project->jru_stakeholders = $project->jru_stakeholders()->with('field_data')->get();
+        $project->community_stakeholders = $project->community_stakeholders()->with('field_data')->get();
+        $project->other_stakeholders = $project->other_stakeholders()->with('field_data')->get();
+        return response()->json(['status'=>'Stakeholder Added!', 'data'=>$project]);
+    }
+
+    public function updateStakeholder(Request $request, $id)
+    {
+        $rules = [
+            'id' => 'required',
+            'project_id' => 'required',
+            'stakeholder' => 'required',
+            'stakeholder_type' => 'required',
+            'field_data.*.*' => 'required',
+        ];
+    
+        $this->validate($request, $rules);
+
+        $old_stakeholder = Stakeholder::find($request['id']);
+        if($request['stakeholder_type'] == $old_stakeholder->stakeholder_type) {
+            foreach($request['field_data'] as $field_data) {
+                $stakeholder_field_data = [
+                    'stakeholder_field_value' => $field_data['stakeholder_field_value']
+                ];
+                $old_stakeholder->field_data()->find($field_data['id'])->update($stakeholder_field_data);
+            }
+        } else {
+            $old_stakeholder->field_data()->delete();
+            $old_stakeholder->update([
+                'stakeholder' => $request['stakeholder'],
+                'stakeholder_type' => $request['stakeholder_type'],
+            ]);
+            foreach($request['field_data'] as $field_data) {
+                $old_stakeholder->field_data()->insert([
+                    'project_stakeholder_id' => $old_stakeholder->id,
+                    'stakeholder_field' => $field_data['stakeholder_field'],
+                    'stakeholder_field_value' => $field_data['stakeholder_field_value']
+                ]);
+            }
+        }
+
+        $project = Project::find($request['project_id']);
+        $project->jru_stakeholders = $project->jru_stakeholders()->with('field_data')->get();
+        $project->community_stakeholders = $project->community_stakeholders()->with('field_data')->get();
+        $project->other_stakeholders = $project->other_stakeholders()->with('field_data')->get();
+        return response()->json(['status'=>'Stakeholder Updated!', 'data'=>$project]);
+    }
+
+    public function removeStakeholder($id)
+    {
+        $stakeholder = Stakeholder::find($id);
+        $project_id = $stakeholder->project_id;
+        $stakeholder->delete();
+
+        $project = Project::find($project_id);
+        $project->jru_stakeholders = $project->jru_stakeholders()->with('field_data')->get();
+        $project->community_stakeholders = $project->community_stakeholders()->with('field_data')->get();
+        $project->other_stakeholders = $project->other_stakeholders()->with('field_data')->get();
+        return response()->json(['status'=>'Stakeholder Removed!', 'data'=>$project]);
     }
 }

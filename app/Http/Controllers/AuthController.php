@@ -45,13 +45,13 @@ class AuthController extends Controller
     public function me()
     {
         $user = auth()->user();
+        $user->role = $user->role;
 
         // if(Storage::disk('public')->exists($user->image))
         //     $user->image = 'data:image/jpg;base64,' . base64_encode(Storage::disk('public')->get($user->image));
 
         $response =[
-            'user'=> $user,
-            'role' => $user->role,
+            'user'=> $user
         ];
         
         return response()->json($response);
