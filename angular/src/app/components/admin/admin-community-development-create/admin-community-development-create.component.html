@@ -14,7 +14,7 @@
                                 <div class="col-sm-9">
                                     <div class="row">
                                         <div class="form-check col-sm-6" *ngFor="let area of project_areas">
-                                            <input class="form-check-input" name="project_area" type="radio" id="project_area{{area.id}}" value="{{area.name}}" formControlName="project_area">
+                                            <input class="form-check-input" name="project_area" type="checkbox" id="project_area{{area.id}}" value="{{area.name}}" (change)="project_area_changed($event)">
                                             <label class="form-check-label" for="project_area{{area.id}}">
                                                 {{area.name}}
                                             </label>

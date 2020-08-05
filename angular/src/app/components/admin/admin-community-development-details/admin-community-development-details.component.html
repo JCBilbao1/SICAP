@@ -55,7 +55,7 @@
                                         <div class="col-sm-9">
                                             <div class="row">
                                                 <div class="form-check col-sm-6" *ngFor="let area of project_areas">
-                                                    <input class="form-check-input" name="project_area" type="radio" id="project_area{{area.id}}" value="{{area.name}}" formControlName="project_area">
+                                                    <input class="form-check-input" name="project_area" type="checkbox" id="project_area{{area.id}}" value="{{area.name}}" (change)="project_area_changed($event)" [checked]="selected_project_areas.indexOf(area.name) > -1">
                                                     <label class="form-check-label" for="project_area{{area.id}}">
                                                         {{area.name}}
                                                     </label>
@@ -312,11 +312,10 @@
                         <div class="form-row breadcrumb" style="padding: 1rem;margin: 0;">
 
                             <div class="form-row col-lg-12">
-                                <select class="form-control col-md-8" (change)="stakeholder_type_selected('edit', stakeholder_for_edit.stakeholder, $event.target.value)" [(ngModel)]="stakeholder_for_edit.stakeholder_type">
+                                <select class="form-control col-md-12" (change)="stakeholder_type_selected('edit', stakeholder_for_edit.stakeholder, $event.target.value)" [(ngModel)]="stakeholder_for_edit.stakeholder_type">
                                     <option value="" selected disabled>Select Stakeholder</option>
                                     <option *ngFor="let stakeholder_type of stakeholders[stakeholder_for_edit?.stakeholder] | keyvalue" value="{{stakeholder_type.key}}">{{stakeholder_type.key}}</option>
                                 </select>
-                                <button type="button" class="col-md-3 btn btn-danger" style="margin-left: auto;" (click)="removeStakeHolder(stakeholder_for_edit?.id)">Remove</button>
                             </div>
          
                             <div class="col-lg-12">
@@ -337,33 +336,6 @@
                             </div>
                         </div>
                     </ng-template>
-
-                    <!-- add buttons -->
-                    <!-- <div class="form-row" [ngClass]="{'is-invalid' : stakeholders}">
-                        <button type="button" style="margin-left: 5px; background-color: rgba(242,173,0,.9);" class="btn btn-info" *ngFor="let stakeholder of stakeholder_keys" (click)="addStakeHolder(stakeholder)">Add {{stakeholder}}</button>
-                    </div> -->
-
-                    <!-- <br> -->
-                    
-                    <!-- stakeholder's details-->
-                    <!-- <div class="form-row breadcrumb" *ngFor="let added_stakeholder of added_stakeholders; index as i" >
-
-                        <select class="form-control col-md-8" (change)="stakeholder_type_selected(i,$event.target.value)" [(ngModel)]="project_stakeholders[i].stakeholder_type">
-                            <option value="" selected disabled>Select Stakeholder</option>
-                            <option *ngFor="let stakeholder_type of added_stakeholder | keyvalue" value="{{stakeholder_type.key}}">{{stakeholder_type.key}}</option>
-                        </select>
-                        <button type="button" class="col-md-3 btn btn-danger" style="margin-left: auto;" (click)="removeStakeHolder(i)">Remove</button>
-                        
-     
-                        <div class="container form-row" *ngFor="let stakeholder of project_stakeholders[i].stakeholder_field_data; index as in">
-                            
-                            <legend class="col-form-label pt-0">{{stakeholder.stakeholder_field}}</legend>
-                            <input type="text" class="form-control form-input" [(ngModel)]="stakeholder.stakeholder_field_value" placeholder="Enter {{stakeholder.stakeholder_field}}">
-                            
-                        </div>
-                        
-                    </div> -->
-
                 </div>
             </div>  
         </div>

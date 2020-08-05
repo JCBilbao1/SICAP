@@ -62,6 +62,7 @@ export class AdminCommunityDevelopmentCreateComponent implements OnInit {
   ];
   added_stakeholders = []
   project_stakeholders = [];
+  selected_project_areas = [];
 
   constructor(
     private API:APIService,
@@ -99,7 +100,6 @@ export class AdminCommunityDevelopmentCreateComponent implements OnInit {
     this.showLoading('Saving', 'Please wait...');
     this.project_form_errors = null;
     let project = this.project_form.value;
-    console.log(project.project_date)
     let project_stakeholders = this.project_stakeholders;
     this.API.post('projects', {
         project_area : project.project_area,
@@ -171,6 +171,21 @@ export class AdminCommunityDevelopmentCreateComponent implements OnInit {
       onBeforeOpen: () => {
         Swal.showLoading();
       },
+    });
+  }
+
+  project_area_changed(event) {
+    if(event.target.checked){
+      this.selected_project_areas.push(event.target.value);
+    } else {
+      const index: number = this.selected_project_areas.indexOf(event.target.value);
+      if (index !== -1) {
+          this.selected_project_areas.splice(index, 1);
+      }
+    }
+    this.selected_project_areas.sort();
+    this.project_form.patchValue({
+      project_area: this.selected_project_areas.join(', ')
     });
   }
 

@@ -80,6 +80,7 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
   stakeholderEditModal: BsModalRef;
   added_stakeholder = null;
   stakeholder_for_edit = null;
+  selected_project_areas = [];
 
   constructor(
     private API:APIService,
@@ -103,8 +104,9 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
   }
 
   loadProject(){
+    this.showLoading('Loading', 'Please wait...');
     this.API.get(`projects/${this.projectId}`).subscribe(
-      data => this.applyData(data),
+      data => {this.applyData(data); Swal.close();},
       error => console.error(error)
     );
   }
@@ -120,14 +122,13 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
       project_theme : data.theme,
       project_status : data.status,
     });
-    // this.loadStakeHolders(data.stakeholders);
     this.jru_stakeholders = data.jru_stakeholders;
     this.community_stakeholders = data.community_stakeholders;
     this.jru_stakeholders = data.jru_stakeholders;
     this.other_stakeholders = data.other_stakeholders;
     this.evaluation_files = data.evaluation_files;
     this.report_files = data.report_files;
-    Swal.close();
+    this.selected_project_areas = this.project_form.value.project_area.split(', ');
     this.dtTrigger.next();
   }
 
@@ -169,13 +170,13 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
   responseSuccess(data){
     this.evaluationFileInput.nativeElement.value = null;
     this.reportFileInput.nativeElement.value = null;
-    this.applyData(data.data);
     Swal.fire({
       'title':data.status,
       'icon':'success',
       showConfirmButton: false,
       timer: 1500,
     });
+    this.applyData(data.data);
   }
 
   responseError(error){
@@ -201,11 +202,6 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
       field_data: [],
     };
     this.openStakeholderAddModal(modal_ref);
-  }
-
-  removeStakeHolder(index) {
-    // this.added_stakeholders.splice(index, 1);
-    // this.project_stakeholders.splice(index, 1);
   }
 
   stakeholder_type_selected(type, stakeholder_key, stakeholder_type_key) {
@@ -416,6 +412,21 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
         title: 'Something went wrong!',
       });
     }
+  }
+
+  project_area_changed(event) {
+    if(event.target.checked){
+      this.selected_project_areas.push(event.target.value);
+    } else {
+      const index: number = this.selected_project_areas.indexOf(event.target.value);
+      if (index !== -1) {
+          this.selected_project_areas.splice(index, 1);
+      }
+    }
+    this.selected_project_areas.sort();
+    this.project_form.patchValue({
+      project_area: this.selected_project_areas.join(', ')
+    });
   }
 
   ngOnInit(): void {
