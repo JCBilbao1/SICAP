@@ -49,23 +49,45 @@
                 <div class="card-body">
                     <div class="form-row">
                         <fieldset class="form-group col-sm-12">
-                            <div class="row" [ngClass]="{'is-invalid' : project_form.project_date}">
-                                <legend class="col-form-label col-sm-3 pt-0">Date</legend>
+                            <div class="row" [ngClass]="{'is-invalid' : project_form.project_start_date}">
+                                <legend class="col-form-label col-sm-3 pt-0">Start Date</legend>
                                 <div class="col-sm-9">
-                                    <input class="form-control form-input" name="project_date" type="date" id="project_date" formControlName="project_date" placeholder="dd-mm-yyy">
+                                    <input class="form-control form-input" name="project_start_date" type="date" id="project_start_date" formControlName="project_start_date" placeholder="dd-mm-yyy">
                                     <div class="error-feedback">
-                                        <p *ngFor="let error of project_form_errors?.project_date">{{error}}</p>
+                                        <p *ngFor="let error of project_form_errors?.project_start_date">{{error}}</p>
                                     </div>
                                 </div>
                             </div>
                         </fieldset>
                         <fieldset class="form-group col-sm-12">
-                            <div class="row" [ngClass]="{'is-invalid' : project_form.project_time}">
-                                <legend class="col-form-label col-sm-3 pt-0">Time</legend>
+                            <div class="row" [ngClass]="{'is-invalid' : project_form.project_start_time}">
+                                <legend class="col-form-label col-sm-3 pt-0">Start Time</legend>
                                 <div class="col-sm-9">
-                                    <input class="form-control form-input" name="project_time" type="text" id="project_time" formControlName="project_time" placeholder="24:00">
+                                    <input class="form-control form-input" name="project_start_time" type="text" id="project_start_time" formControlName="project_start_time" placeholder="24:00">
                                     <div class="error-feedback">
-                                        <p *ngFor="let error of project_form_errors?.project_time">{{error}}</p>
+                                        <p *ngFor="let error of project_form_errors?.project_start_time">{{error}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group col-sm-12">
+                            <div class="row" [ngClass]="{'is-invalid' : project_form.project_end_date}">
+                                <legend class="col-form-label col-sm-3 pt-0">End Date</legend>
+                                <div class="col-sm-9">
+                                    <input class="form-control form-input" name="project_end_date" type="date" id="project_end_date" formControlName="project_end_date" placeholder="dd-mm-yyy">
+                                    <div class="error-feedback">
+                                        <p *ngFor="let error of project_form_errors?.project_end_date">{{error}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset class="form-group col-sm-12">
+                            <div class="row" [ngClass]="{'is-invalid' : project_form.project_end_time}">
+                                <legend class="col-form-label col-sm-3 pt-0">End Time</legend>
+                                <div class="col-sm-9">
+                                    <input class="form-control form-input" name="project_end_time" type="text" id="project_end_time" formControlName="project_end_time" placeholder="24:00">
+                                    <div class="error-feedback">
+                                        <p *ngFor="let error of project_form_errors?.project_end_time">{{error}}</p>
                                     </div>
                                 </div>
                             </div>

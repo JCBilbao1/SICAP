@@ -22,6 +22,10 @@
     <li class="nav-item">
         <a class="nav-link" [routerLink]="" id="report-tab" (click)="openTab('report')" style="background-color: #152d65;color:white;margin-left:10px;">Report</a>
     </li>
+    <!-- Photos -->
+    <li class="nav-item">
+        <a class="nav-link" [routerLink]="" id="photos-tab" (click)="openTab('photos')" style="background-color: #152d65;color:white;margin-left:10px;">Photos</a>
+    </li>
 </ul>
 
 <!-- Details tab start -->
@@ -90,23 +94,45 @@
                         <div class="card-body">
                             <div class="form-row">
                                 <fieldset class="form-group col-sm-12">
-                                    <div class="row" [ngClass]="{'is-invalid' : project_form?.project_date}">
+                                    <div class="row" [ngClass]="{'is-invalid' : project_form?.project_start_date}">
                                         <legend class="col-form-label col-sm-3 pt-0">Date</legend>
                                         <div class="col-sm-9">
-                                            <input class="form-control form-input" name="project_date" type="date" id="project_date" formControlName="project_date" placeholder="dd-mm-yyy">
+                                            <input class="form-control form-input" name="project_start_date" type="date" id="project_start_date" formControlName="project_start_date" placeholder="dd-mm-yyy">
                                             <div class="error-feedback">
-                                                <p *ngFor="let error of project_form_errors?.project_date">{{error}}</p>
+                                                <p *ngFor="let error of project_form_errors?.project_start_date">{{error}}</p>
                                             </div>
                                         </div>
                                     </div>
                                 </fieldset>
                                 <fieldset class="form-group col-sm-12">
-                                    <div class="row" [ngClass]="{'is-invalid' : project_form?.project_time}">
+                                    <div class="row" [ngClass]="{'is-invalid' : project_form?.project_start_time}">
                                         <legend class="col-form-label col-sm-3 pt-0">Time</legend>
                                         <div class="col-sm-9">
-                                            <input class="form-control form-input" name="project_time" type="text" id="project_time" formControlName="project_time" placeholder="24:00">
+                                            <input class="form-control form-input" name="project_start_time" type="text" id="project_start_time" formControlName="project_start_time" placeholder="24:00">
                                             <div class="error-feedback">
-                                                <p *ngFor="let error of project_form_errors?.project_time">{{error}}</p>
+                                                <p *ngFor="let error of project_form_errors?.project_start_time">{{error}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="form-group col-sm-12">
+                                    <div class="row" [ngClass]="{'is-invalid' : project_form?.project_end_date}">
+                                        <legend class="col-form-label col-sm-3 pt-0">Date</legend>
+                                        <div class="col-sm-9">
+                                            <input class="form-control form-input" name="project_end_date" type="date" id="project_end_date" formControlName="project_end_date" placeholder="dd-mm-yyy">
+                                            <div class="error-feedback">
+                                                <p *ngFor="let error of project_form_errors?.project_end_date">{{error}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="form-group col-sm-12">
+                                    <div class="row" [ngClass]="{'is-invalid' : project_form?.project_end_time}">
+                                        <legend class="col-form-label col-sm-3 pt-0">Time</legend>
+                                        <div class="col-sm-9">
+                                            <input class="form-control form-input" name="project_end_time" type="text" id="project_end_time" formControlName="project_end_time" placeholder="24:00">
+                                            <div class="error-feedback">
+                                                <p *ngFor="let error of project_form_errors?.project_end_time">{{error}}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -294,8 +320,33 @@
                             </div>
 
                             <div class="container form-row col-lg-12" *ngFor="let stakeholder of added_stakeholder?.field_data; index as in">
-                                <legend class="col-form-label pt-0">{{stakeholder.stakeholder_field}}</legend>
-                                <input type="text" class="form-control form-input" [(ngModel)]="stakeholder.stakeholder_field_value" placeholder="Enter {{stakeholder.stakeholder_field}}">
+                                <legend *ngIf="stakeholder.stakeholder_field !== 'Student Organization' || 
+                                    (stakeholder.stakeholder_field === 'Student Organization' && added_stakeholder.student_organizations)" 
+                                    class="col-form-label pt-0">{{stakeholder.stakeholder_field}}
+                                </legend>
+                                <input 
+                                    *ngIf="stakeholder.stakeholder_field !== 'Program' && stakeholder.stakeholder_field !== 'Program/Department' && stakeholder.stakeholder_field !== 'Program/Office' &&
+                                        stakeholder.stakeholder_field !== 'Yr. Level' && stakeholder.stakeholder_field !== 'Student Organization'" 
+                                    type="text" class="form-control form-input" [(ngModel)]="stakeholder.stakeholder_field_value" placeholder="Enter {{stakeholder.stakeholder_field}}"
+                                >
+                                <select *ngIf="stakeholder.stakeholder_field === 'Yr. Level'" class="form-control" [(ngModel)]="stakeholder.stakeholder_field_value">
+                                    <option value="" selected disabled>Select {{stakeholder.stakeholder_field}}</option>
+                                    <option *ngFor="let year_level of year_levels" value="{{year_level}}">{{year_level}}</option>
+                                </select>
+                                <select *ngIf="stakeholder.stakeholder_field === 'Program' || stakeholder.stakeholder_field === 'Program/Department'" class="form-control" 
+                                    (change)="program_type_selected('add', $event.target.value)" [(ngModel)]="stakeholder.stakeholder_field_value">
+                                    <option value="" selected disabled>Select {{stakeholder.stakeholder_field}}</option>
+                                    <option *ngFor="let program of programs | keyvalue" value="{{program.key}}">{{program.key}}</option>
+                                </select>
+                                <select *ngIf="stakeholder.stakeholder_field === 'Program/Office'" class="form-control" [(ngModel)]="stakeholder.stakeholder_field_value">
+                                    <option value="" selected disabled>Select {{stakeholder.stakeholder_field}}</option>
+                                    <option *ngFor="let program of programs | keyvalue" value="{{program.key}}">{{program.key}}</option>
+                                </select>
+                                <select *ngIf="stakeholder.stakeholder_field === 'Student Organization' && added_stakeholder.student_organizations" class="form-control" 
+                                    [(ngModel)]="stakeholder.stakeholder_field_value">
+                                    <option value="" selected disabled>Select {{stakeholder.stakeholder_field}}</option>
+                                    <option *ngFor="let student_organization of added_stakeholder.student_organizations" value="{{student_organization}}">{{student_organization}}</option>
+                                </select>
                             </div>
                             
                             <div class="col-lg-12">
@@ -323,8 +374,33 @@
                             </div>
 
                             <div class="container form-row col-lg-12" *ngFor="let stakeholder of stakeholder_for_edit?.field_data; index as in">
-                                <legend class="col-form-label pt-0">{{stakeholder.stakeholder_field}}</legend>
-                                <input type="text" class="form-control form-input" [(ngModel)]="stakeholder.stakeholder_field_value" placeholder="Enter {{stakeholder.stakeholder_field}}">
+                                <legend *ngIf="stakeholder.stakeholder_field !== 'Student Organization' || 
+                                    (stakeholder.stakeholder_field === 'Student Organization' && stakeholder_for_edit.student_organizations)" 
+                                    class="col-form-label pt-0">{{stakeholder.stakeholder_field}}
+                                </legend>
+                                <input 
+                                    *ngIf="stakeholder.stakeholder_field !== 'Program' && stakeholder.stakeholder_field !== 'Program/Department' && stakeholder.stakeholder_field !== 'Program/Office' &&
+                                        stakeholder.stakeholder_field !== 'Yr. Level' && stakeholder.stakeholder_field !== 'Student Organization'" 
+                                    type="text" class="form-control form-input" [(ngModel)]="stakeholder.stakeholder_field_value" placeholder="Enter {{stakeholder.stakeholder_field}}"
+                                >
+                                <select *ngIf="stakeholder.stakeholder_field === 'Yr. Level'" class="form-control" [(ngModel)]="stakeholder.stakeholder_field_value">
+                                    <option value="" selected disabled>Select {{stakeholder.stakeholder_field}}</option>
+                                    <option *ngFor="let year_level of year_levels" value="{{year_level}}">{{year_level}}</option>
+                                </select>
+                                <select *ngIf="stakeholder.stakeholder_field === 'Program' || stakeholder.stakeholder_field === 'Program/Department'" class="form-control" 
+                                    (change)="program_type_selected('edit', $event.target.value)" [(ngModel)]="stakeholder.stakeholder_field_value">
+                                    <option value="" selected disabled>Select {{stakeholder.stakeholder_field}}</option>
+                                    <option *ngFor="let program of programs | keyvalue" value="{{program.key}}">{{program.key}}</option>
+                                </select>
+                                <select *ngIf="stakeholder.stakeholder_field === 'Program/Office'" class="form-control" [(ngModel)]="stakeholder.stakeholder_field_value">
+                                    <option value="" selected disabled>Select {{stakeholder.stakeholder_field}}</option>
+                                    <option *ngFor="let program of programs | keyvalue" value="{{program.key}}">{{program.key}}</option>
+                                </select>
+                                <select *ngIf="stakeholder.stakeholder_field === 'Student Organization' && stakeholder_for_edit.student_organizations" class="form-control" 
+                                    [(ngModel)]="stakeholder.stakeholder_field_value">
+                                    <option value="" selected disabled>Select {{stakeholder.stakeholder_field}}</option>
+                                    <option *ngFor="let student_organization of stakeholder_for_edit.student_organizations" value="{{student_organization}}">{{student_organization}}</option>
+                                </select>
                             </div>
                             
                             <div class="col-lg-12">
@@ -391,5 +467,29 @@
         </div>
     </div>
     <!-- Report tab end -->
+
+    <!-- Photos tab start -->
+    <div class="tab-pane fade" id="photos" role="tabpanel" aria-labelledby="photos-tab">
+        <h2>Photos</h2>
+		<br>
+		<div class="form-group">
+            <h6>
+                Image File: <input #imageFileInput type="file" class="btn" (change)="file_upload($event, 'image')" accept="image/*" />
+                <button type="button" class="btn btn-primary" (click)="upload_image()" *ngIf="image_file">Upload</button>
+            </h6>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="card col-sm-6 col-lg-4" *ngFor="let image of image_files">
+                <div class="card-body">
+                    <a href="{{image.url}}" target="_blank">
+                        {{image.original_file_name}}
+                    </a>
+                    <button type="button" class="btn btn-danger btn-sm float-right" (click)="delete_file(image.id)">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Photos tab end -->
 
 </div>

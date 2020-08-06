@@ -33,17 +33,22 @@ class ProjectController extends Controller
             'project_strategy' => 'required',
             'project_place' => 'required',
             'project_theme' => 'required',
-            'project_date' => 'required|date_format:Y-m-d',
-            'project_time' => 'required|date_format:H:i',
+            'project_start_date' => 'required|date_format:Y-m-d',
+            'project_start_time' => 'required|date_format:H:i',
+            'project_end_date' => 'required|date_format:Y-m-d',
+            'project_end_time' => 'required|date_format:H:i',
         ];
     
         $customMessages = [
-            'project_date.date_format' => 'The date must be in dd-mm-yyyy format.',
-            'project_time.date_format' => 'The time must be in 24 hour & hh:mm format.'
+            'project_start_date.date_format' => 'The date must be in dd-mm-yyyy format.',
+            'project_start_time.date_format' => 'The time must be in 24 hour & hh:mm format.',
+            'project_end_date.date_format' => 'The date must be in dd-mm-yyyy format.',
+            'project_end_time.date_format' => 'The time must be in 24 hour & hh:mm format.'
         ];
     
         $this->validate($request, $rules, $customMessages);
-        $date = date_format(date_create($request['project_date'].' '.$request['project_time']), "Y/m/d H:i:s");
+        $date = date_format(date_create($request['project_start_date'].' '.$request['project_start_time']), "Y/m/d H:i:s");
+        $end_date = date_format(date_create($request['project_end_date'].' '.$request['project_end_time']), "Y/m/d H:i:s");
 
         $project = new Project;
         $project->project_area = $request['project_area'];
@@ -51,6 +56,7 @@ class ProjectController extends Controller
         $project->place = $request['project_place'];
         $project->theme = $request['project_theme'];
         $project->date = $date;
+        $project->end_date = $end_date;
         $project->save();
 
         return response()->json(['status'=>'Project created!', 'project_id'=>$project->id]);
@@ -77,6 +83,10 @@ class ProjectController extends Controller
             $file['url'] = url(Storage::url($file->directory . $file->file_name));
             return $file;
         });
+        $project->image_files = $project->image_files->map(function($file){
+            $file['url'] = url(Storage::url($file->directory . $file->file_name));
+            return $file;
+        });
         return response()->json($project);
     }
 
@@ -94,17 +104,22 @@ class ProjectController extends Controller
             'project_strategy' => 'required',
             'project_place' => 'required',
             'project_theme' => 'required',
-            'project_date' => 'required|date_format:Y-m-d',
-            'project_time' => 'required|date_format:H:i',
+            'project_start_date' => 'required|date_format:Y-m-d',
+            'project_start_time' => 'required|date_format:H:i',
+            'project_end_date' => 'required|date_format:Y-m-d',
+            'project_end_time' => 'required|date_format:H:i',
         ];
     
         $customMessages = [
-            'project_date.date_format' => 'The date must be in dd-mm-yyyy format.',
-            'project_time.date_format' => 'The time must be in 24 hour & HH:MM format.'
+            'project_start_date.date_format' => 'The date must be in dd-mm-yyyy format.',
+            'project_start_time.date_format' => 'The time must be in 24 hour & hh:mm format.',
+            'project_end_date.date_format' => 'The date must be in dd-mm-yyyy format.',
+            'project_end_time.date_format' => 'The time must be in 24 hour & hh:mm format.'
         ];
     
         $this->validate($request, $rules, $customMessages);
-        $date = date_format(date_create($request['project_date'].' '.$request['project_time']), "Y/m/d H:i:s");
+        $date = date_format(date_create($request['project_start_date'].' '.$request['project_start_time']), "Y/m/d H:i:s");
+        $end_date = date_format(date_create($request['project_end_date'].' '.$request['project_end_time']), "Y/m/d H:i:s");
         
         $project = Project::find($id);
         $project->project_area = $request['project_area'];
@@ -112,6 +127,7 @@ class ProjectController extends Controller
         $project->place = $request['project_place'];
         $project->theme = $request['project_theme'];
         $project->date = $date;
+        $project->end_date = $end_date;
         $project->status = ($request['project_status'] == 'null') ? null : $request['project_status'];
         $project->save();
 
@@ -177,6 +193,10 @@ class ProjectController extends Controller
             $file['url'] = url(Storage::url($file->directory . $file->file_name));
             return $file;
         });
+        $project->image_files = $project->image_files->map(function($file){
+            $file['url'] = url(Storage::url($file->directory . $file->file_name));
+            return $file;
+        });
 
         return response()->json(['status'=>'Project Updated!', 'data'=>$project]);
     }
@@ -239,6 +259,10 @@ class ProjectController extends Controller
             $file['url'] = url(Storage::url($file->directory . $file->file_name));
             return $file;
         });
+        $project->image_files = $project->image_files->map(function($file){
+            $file['url'] = url(Storage::url($file->directory . $file->file_name));
+            return $file;
+        });
         return response()->json(['status'=>'File Uploaded!', 'data'=>$project]);
     }
 
@@ -257,6 +281,10 @@ class ProjectController extends Controller
             return $file;
         });
         $project->report_files = $project->report_files->map(function($file){
+            $file['url'] = url(Storage::url($file->directory . $file->file_name));
+            return $file;
+        });
+        $project->image_files = $project->image_files->map(function($file){
             $file['url'] = url(Storage::url($file->directory . $file->file_name));
             return $file;
         });

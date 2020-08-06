@@ -24,10 +24,10 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
         'Name', 'Yr. Level', 'Program', 'Student Organization'
       ],
       'Faculty' : [
-        'Name', 'Yr. Level - 0', 'Program/Department', 'Student Organization'
+        'Name', 'Yr. Level', 'Program/Department', 'Student Organization'
       ],
       'Employee/Staff' : [
-        'Name', 'Yr. Level - 0', 'Program/Office', 'Designation'
+        'Name', 'Yr. Level', 'Program/Office', 'Designation'
       ],
       'Officer' : [
         'Name', 'Yr. Level', 'Program/Office'
@@ -63,14 +63,60 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
   student_organizations = [
     'COMSOC', 'YES', 'CPE', 'ECE', 'JPIA', 'MATSOC', 'HTM', 'CRIMSOC', 'TEATRO', 'JPEG', 'HISTORY', 'MANSOC', 'YOUNG MAKETER', 'SCA', 'Etc'
   ];
-  // added_stakeholders = []
-  // project_stakeholders = [];
+  year_levels = [
+    1,2,3,4,0
+  ];
+  programs = {
+    'College of Liberal Arts, Criminology and Education (ACE)' : [
+      'Association of Students of History (ASH)',
+      'Criminal Justice Students Society (CJSS)',
+      'Liberal Arts Students Organization (LASO)',
+      'Mathematics Society (MATHSOC)',
+      'Young, Educators Society (YES)',
+    ],
+    'College of Business Administration and Accountancy (BAA)' : [
+      'Junior Finance and Economics Society (JFINECS)',
+      'Junior Philippine Institute of Accountants (JPIA)',
+      'Management Society (MANSOC)',
+      'Supply Management Society (SMS)',
+      'Young Marketers Association (YMA)',
+    ],
+    'College of Computer Studies and Engineering (CSE)' : [
+      'Institute of Computer Engineers of the Philippines Student Edition National Capital Region José Rizal University Chapter (ICpEP.SE NCR JRU Chapter)',
+      'Computer Society (COMSOC)',
+      'Electronics Engineering League (ECEL)',
+    ],
+    'College of Hospitality and Tourism Management (HTM)' : [
+      'Association of Tourism Management Students (ATOMS)',
+      'Hospitality, Hotelier and Restaurateur Society (HHRS)',
+    ],
+    'College of Nursing and Health Sciences (NHS)' : [
+      'Nursing Society (NURSOC)',
+    ],
+    'NON-ACADEMIC ORGANIZATIONS' : [
+      'Advocates',
+      'José Rizal University Book Buddies',
+      'Young Rizalian Servant Leaders (YRSL)',
+      'Golden Z Club',
+      'International Students Association (ISA)',
+    ],
+    'Arts' : [
+      'José Rizal University Chorale',
+      'José Rizal University Dance Troupe',
+      'Teatro Rizal',
+      'Junior Photographic Editors and Graphic Artists (JPEG)',
+    ]
+  };
+  program_keys = Object.keys(this.programs);
   @ViewChild('evaluationFileInput') evaluationFileInput;
   @ViewChild('reportFileInput') reportFileInput;
+  @ViewChild('imageFileInput') imageFileInput;
   evaluation_files = [];
   evaluation_file = null;
   report_files = [];
   report_file = null;
+  image_files = [];
+  image_file = null;
   dtOptions: DataTables.Settings = {};
   dtTrigger: Subject<any> = new Subject();
   jru_stakeholders = null;
@@ -91,8 +137,10 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
     this.project_form = this.formBuilder.group({
       project_area : '',
       project_strategy : '',
-      project_date : '',
-      project_time : '',
+      project_start_date : '',
+      project_start_time : '',
+      project_end_date : '',
+      project_end_time : '',
       project_place : '',
       project_theme : '',
       project_status : '',
@@ -113,11 +161,14 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
 
   applyData(data){
     let date = new Date(data.date);
+    let end_date = new Date(data.end_date);
     this.project_form = this.formBuilder.group({
       project_area : data.project_area,
       project_strategy : data.project_strategy,
-      project_date : date.getFullYear() + '-' + (((date.getMonth()+1)<=9) ? '0' : '') + (date.getMonth()+1) + '-' + (((date.getDate())<=9) ? '0' : '') + date.getDate(),
-      project_time : (((date.getHours())<=9) ? '0' : '') + date.getHours( ) + ':' + (((date.getMinutes())<=9) ? '0' : '') + date.getMinutes(),
+      project_start_date : date.getFullYear() + '-' + (((date.getMonth()+1)<=9) ? '0' : '') + (date.getMonth()+1) + '-' + (((date.getDate())<=9) ? '0' : '') + date.getDate(),
+      project_start_time : (((date.getHours())<=9) ? '0' : '') + date.getHours( ) + ':' + (((date.getMinutes())<=9) ? '0' : '') + date.getMinutes(),
+      project_end_date : end_date.getFullYear() + '-' + (((end_date.getMonth()+1)<=9) ? '0' : '') + (end_date.getMonth()+1) + '-' + (((end_date.getDate())<=9) ? '0' : '') + end_date.getDate(),
+      project_end_time : (((end_date.getHours())<=9) ? '0' : '') + end_date.getHours( ) + ':' + (((end_date.getMinutes())<=9) ? '0' : '') + end_date.getMinutes(),
       project_place : data.place,
       project_theme : data.theme,
       project_status : data.status,
@@ -128,7 +179,15 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
     this.other_stakeholders = data.other_stakeholders;
     this.evaluation_files = data.evaluation_files;
     this.report_files = data.report_files;
+    this.image_files = data.image_files;
     this.selected_project_areas = this.project_form.value.project_area.split(', ');
+    this.dtTrigger.next();
+    this.dtOptions = {};
+    this.dtTrigger = new Subject();
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 10
+    };
     this.dtTrigger.next();
   }
 
@@ -155,8 +214,10 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
         project_strategy : project.project_strategy,
         project_place : project.project_place,
         project_theme : project.project_theme,
-        project_date : project.project_date,
-        project_time : project.project_time,
+        project_start_date : project.project_start_date,
+        project_start_time : project.project_start_time,
+        project_end_date : project.project_end_date,
+        project_end_time : project.project_end_time,
         project_status : project.project_status,
     }).subscribe(
       (data:any) => {
@@ -170,6 +231,7 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
   responseSuccess(data){
     this.evaluationFileInput.nativeElement.value = null;
     this.reportFileInput.nativeElement.value = null;
+    this.imageFileInput.nativeElement.value = null;
     Swal.fire({
       'title':data.status,
       'icon':'success',
@@ -245,8 +307,10 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
   file_upload(event, type) {
     if(type=="evaluation") {
       this.evaluation_file = event.target.files[0];
-    } else {
+    } else if(type=="report") {
       this.report_file = event.target.files[0];
+    } else {
+      this.image_file = event.target.files[0];
     }
   }
 
@@ -272,6 +336,22 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
     formData.append('project_id', this.projectId);
     formData.append('file', this.report_file);
     formData.append('type', 'report');
+
+    this.API.post('projects/add-file', formData).subscribe(
+      (data:any) => {
+        this.dtTrigger.unsubscribe();
+        this.responseSuccess(data)
+      },
+      error => this.responseError(error)
+    );
+  }
+
+  upload_image() {
+    this.showLoading('Uploading', 'Please wait...');
+    const formData = new FormData();
+    formData.append('project_id', this.projectId);
+    formData.append('file', this.image_file);
+    formData.append('type', 'image');
 
     this.API.post('projects/add-file', formData).subscribe(
       (data:any) => {
@@ -332,6 +412,10 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
 
   viewStakeholder(modal_ref: TemplateRef<any>, stakeholder) {
     this.stakeholder_for_edit = JSON.parse(JSON.stringify(stakeholder));
+    let program_department_index = this.stakeholder_for_edit.field_data.findIndex(field => field.stakeholder_field === 'Program' || field.stakeholder_field === 'Program/Department')
+    if(program_department_index !== -1)
+      this.stakeholder_for_edit.student_organizations = this.programs[this.stakeholder_for_edit.field_data[program_department_index].stakeholder_field_value];
+      console.log(this.stakeholder_for_edit)
     this.openStakeholderEditModal(modal_ref);
   }
 
@@ -396,6 +480,12 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
       showConfirmButton: false,
       timer: 1500,
     });
+    this.dtOptions = {};
+    this.dtTrigger = new Subject();
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 10
+    };
     this.dtTrigger.next();
   }
 
@@ -427,6 +517,14 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
     this.project_form.patchValue({
       project_area: this.selected_project_areas.join(', ')
     });
+  }
+
+  program_type_selected(type, program_key) {
+    if(type == 'add') {
+      this.added_stakeholder.student_organizations = this.programs[program_key];
+    } else if(type == 'edit') {
+      this.stakeholder_for_edit.student_organizations = this.programs[program_key];
+    }
   }
 
   ngOnInit(): void {

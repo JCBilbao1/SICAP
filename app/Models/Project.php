@@ -9,7 +9,7 @@ class Project extends Model
     protected $table = 'projects';
     
     protected $fillable = [
-        'project_area', 'project_strategy', 'place', 'theme', 'date', 'status',
+        'project_area', 'project_strategy', 'place', 'theme', 'date', 'end_date', 'status',
     ];
 
     public function stakeholders()
@@ -45,6 +45,11 @@ class Project extends Model
     public function report_files()
     {
         return $this->belongsToMany('App\Models\File', 'project_file')->wherePivot('type', 'report')->withTimeStamps()->latest();
+    }
+
+    public function image_files()
+    {
+        return $this->belongsToMany('App\Models\File', 'project_file')->wherePivot('type', 'image')->withTimeStamps()->latest();
     }
     
 }

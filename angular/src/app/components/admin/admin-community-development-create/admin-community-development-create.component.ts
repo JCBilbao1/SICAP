@@ -57,9 +57,6 @@ export class AdminCommunityDevelopmentCreateComponent implements OnInit {
     }
   };
   stakeholder_keys = Object.keys(this.stakeholders);
-  student_organizations = [
-    'COMSOC', 'YES', 'CPE', 'ECE', 'JPIA', 'MATSOC', 'HTM', 'CRIMSOC', 'TEATRO', 'JPEG', 'HISTORY', 'MANSOC', 'YOUNG MAKETER', 'SCA', 'Etc'
-  ];
   added_stakeholders = []
   project_stakeholders = [];
   selected_project_areas = [];
@@ -75,8 +72,10 @@ export class AdminCommunityDevelopmentCreateComponent implements OnInit {
     this.project_form = this.formBuilder.group({
       project_area : '',
       project_strategy : '',
-      project_date : '',
-      project_time : '',
+      project_start_date : '',
+      project_start_time : '',
+      project_end_date : '',
+      project_end_time : '',
       project_place : '',
       project_theme : ''
     });
@@ -106,8 +105,10 @@ export class AdminCommunityDevelopmentCreateComponent implements OnInit {
         project_strategy : project.project_strategy,
         project_place : project.project_place,
         project_theme : project.project_theme,
-        project_date : project.project_date,
-        project_time : project.project_time,
+        project_start_date : project.project_start_date,
+        project_start_time : project.project_start_time,
+        project_end_date : project.project_end_date,
+        project_end_time : project.project_end_time,
         stakeholders : project_stakeholders
     }).subscribe(
       data => this.responseSuccess(data),
