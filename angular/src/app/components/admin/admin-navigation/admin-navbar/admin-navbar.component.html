@@ -1,10 +1,15 @@
 <!-- Upper navigation bar start -->
 <nav class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow navbar-toggleable-md navbar-light bg-faded" style="background-color: #f9bd3b; height:50px;">
   <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" style="color:#152d65;"><h2>JRU-SICAP</h2></a>
-  <ul class="navbar-nav px-3">
+  <ul class="navbar-nav px-3" style="flex-direction:row">
+    <li class="nav-item text-nowrap" style="margin-right: 15px;">
+      <a class="nav-link" *ngIf="loggedIn" style="color: black;"  routerLink="/my-account" routerLinkActive="active">
+        <i class="fa fa-user" style="font-size:24px"></i> My Account
+      </a>
+    </li>
     <li class="nav-item text-nowrap">
       <a class="nav-link" routerLink="/login" *ngIf="!loggedIn" >Sign in</a>
-      <a class="nav-link" href="#" (click)="logout($event)" *ngIf="loggedIn" style="color: black;"> Sign out <i class="fa fa-sign-out" style="font-size:24px"></i></a>
+      <a class="nav-link" href="#" (click)="logout($event)" *ngIf="loggedIn" style="color: black;"><i class="fa fa-sign-out" style="font-size:24px"></i> Sign out</a>
     </li>
   </ul>
 </nav>

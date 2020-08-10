@@ -10,6 +10,7 @@ import { AdminUsersComponent } from './components/admin/admin-users/admin-users.
 import { AdminCommunityDevelopmentComponent } from './components/admin/admin-community-development/admin-community-development.component';
 import { AdminCommunityDevelopmentCreateComponent } from './components/admin/admin-community-development-create/admin-community-development-create.component';
 import { AdminCommunityDevelopmentDetailsComponent } from './components/admin/admin-community-development-details/admin-community-development-details.component';
+import { AdminMyAccountComponent } from './components/admin/admin-my-account/admin-my-account.component';
 
 //url and component connection
 const routes: Routes = [
@@ -19,18 +20,14 @@ const routes: Routes = [
     canActivate: [BeforeLoginService],
   },
   {
-    path: 'register',
-    component: RegisterComponent,
-    canActivate: [BeforeLoginService],
-  },
-  {
     path:'',
     component: AdminComponent,
     canActivate: [AfterLoginService],
     children: [
       {
         path: '',
-        component: AdminDashboardComponent
+        redirectTo: 'community-development',
+        pathMatch: 'full'
       },
       {
         path: 'community-development',
@@ -47,6 +44,10 @@ const routes: Routes = [
       {
         path: 'users',
         component: AdminUsersComponent
+      },
+      {
+        path: 'my-account',
+        component: AdminMyAccountComponent
       }
     ]
   },

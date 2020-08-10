@@ -45,7 +45,7 @@ class AuthController extends Controller
     public function me()
     {
         $user = auth()->user();
-        $user->role = $user->role;
+        $user->role_name = $user->role;
 
         // if(Storage::disk('public')->exists($user->image))
         //     $user->image = 'data:image/jpg;base64,' . base64_encode(Storage::disk('public')->get($user->image));
@@ -59,19 +59,51 @@ class AuthController extends Controller
 
     public function putMe(Request $request)
     {
-        $update_data = $request->form_data;
-        
+        $rules = [
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required',
+        ];
+    
+        $this->validate($request, $rules);
+
         $user = auth()->user();
 
         $data_to_update = [
-            'first_name' => $update_data['first_name'],
-            'last_name' => $update_data['last_name'],
-            'email' => $update_data['email_address'],
+            'first_name' => $request['first_name'],
+            'last_name' => $request['last_name'],
+            'email' => $request['email'],
         ];
 
         $user->update($data_to_update);
 
         $response =[
+            'status' => 'Account Updated!',
+            'user'=> $user,
+        ];
+        
+        return response()->json($response);
+    }
+
+    public function changePassword(Request $request)
+    {
+        $rules = [
+            'current_password' => 'required|password',
+            'password' => 'required|confirmed',
+        ];
+    
+        $this->validate($request, $rules);
+
+        $user = auth()->user();
+
+        $data_to_update = [
+            'password' => $request['password'],
+        ];
+
+        $user->update($data_to_update);
+
+        $response =[
+            'status' => 'Password Changed!',
             'user'=> $user,
         ];
         

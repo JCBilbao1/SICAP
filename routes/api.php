@@ -8,6 +8,7 @@ Route::group(['middleware'=>'api','prefix' => 'auth'], function () {
     Route::post('refresh', 'AuthController@refresh');
     Route::post('me', 'AuthController@me');
     Route::put('me', 'AuthController@putMe');
+    Route::put('me/change_password', 'AuthController@changePassword');
     Route::post('signup', 'AuthController@signup');
 });
 
