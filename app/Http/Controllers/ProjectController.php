@@ -388,7 +388,15 @@ class ProjectController extends Controller
     }
 
     public function generateCertificates(Request $request) {
+
+        $rules = [
+            'certificate.*' => 'required',
+        ];
+    
+        $this->validate($request, $rules);
+
         $projectId = $request['projectId'];
+        $certificate = $request['certificate'];
 
         $stakeholders = Project::find($projectId)->stakeholders()->with('field_data')->get();
 
@@ -398,9 +406,9 @@ class ProjectController extends Controller
                 $stakeholder_name = $stakeholder->field_data()->first()->stakeholder_field_value;
                 $data = [
                     'name' => $stakeholder_name,
-                    'body' => 'This is the body of the certificate',
-                    'date' => 'DATE',
-                    'place' => 'PLACE'
+                    'body' => $certificate['body'],
+                    'date' => $certificate['date'],
+                    'place' => $certificate['place']
                 ];
 
                 $pdf = PDF::loadView('certificate-template', ['data'=>$data])

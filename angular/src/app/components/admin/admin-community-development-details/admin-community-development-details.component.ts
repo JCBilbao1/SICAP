@@ -129,6 +129,11 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
   added_stakeholder = null;
   stakeholder_for_edit = null;
   selected_project_areas = [];
+  certificate = {
+    body: '',
+    date: '',
+    place: '',
+  }
 
   constructor(
     private API:APIService,
@@ -417,7 +422,6 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
     let program_department_index = this.stakeholder_for_edit.field_data.findIndex(field => field.stakeholder_field === 'Program' || field.stakeholder_field === 'Program/Department')
     if(program_department_index !== -1)
       this.stakeholder_for_edit.student_organizations = this.programs[this.stakeholder_for_edit.field_data[program_department_index].stakeholder_field_value];
-      console.log(this.stakeholder_for_edit)
     this.openStakeholderEditModal(modal_ref);
   }
 
@@ -531,13 +535,28 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
 
   downloadCertificates() {
     this.showLoading('Generating Certificates', 'Please wait...');
-    this.API.download('projects/download-certificates/', {projectId : this.projectId}).subscribe(
+    this.API.download('projects/download-certificates/', {projectId : this.projectId, certificate: this.certificate}).subscribe(
       (response:any) => {
         Swal.close();
         const blob = new Blob([response], {type: 'application/octet-stream'});
         saveAs(blob, 'Project-'+this.projectId+'.zip');
       },
-      error => console.error(error)
+      error => {
+        Swal.close();
+        console.error(error);
+        if(error.status === 422) {
+          Swal.fire({
+            'title':'Something went wrong!',
+            'icon':'error',
+            'html':'<h4>Please make sure all fields have been filled out.</h4>'
+          });
+        } else {
+          Swal.fire({
+            'title':'Something went wrong!',
+            'icon':'error',
+          });
+        }
+      }
     );
   }
 

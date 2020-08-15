@@ -512,31 +512,35 @@
         <br>
         <br>
 
-        <div class="d-flex justify-content-center"><h2>JOSE RIZAL </h2></div>
+        <div class="d-flex justify-content-center"><h2>Name of Stakeholder</h2></div>
 
         <br>
         <br>
 
-        <div class="d-flex justify-content-center"><h6>bale dito ay input kung ano ang gusto nyang ilagay as body ng certification(dynamic kuno)</h6></div>
+        <div class="d-flex justify-content-center"><h6><textarea [(ngModel)]="certificate.body" placeholder="Body of the Certificate" style="width: 600px;height: 100px;text-align: center;"></textarea></h6></div>
 
         <br>
 
-        <div class="d-flex justify-content-center"><h6>Given this DATE at PLACE </h6></div>
+        <div class="d-flex justify-content-center"><h6>Given this 
+            <input [(ngModel)]="certificate.date" placeholder="Date"/>
+             at 
+            <input [(ngModel)]="certificate.place" placeholder="Place"/></h6>
+        </div>
 
         <br>
         <br>
         
         <div class="d-flex justify-content-around">
             <div style="float:left"> 
-                    <h5>Dynamic Name</h5>
-                    <h6>Dynamic Position</h6>
+                    <h5>MYRNA NIDEA</h5>
+                    <h6>CDO-Coordinator</h6>
             </div>
 
             <div></div>
 
             <div style="float:right"> 
-                <h5>Dynamic Name</h5>
-                <h6>Dynamic Position</h6>
+                <h5>ANA BELEN CUYUGAN</h5>
+                <h6>CDO-Coordinator</h6>
             </div>
         </div>
         <button class="btn btn-primary" (click)="downloadCertificates()"> Download</button>
