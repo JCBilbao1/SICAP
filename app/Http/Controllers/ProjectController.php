@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\Stakeholder;
 use Illuminate\Support\Facades\Storage;
+use PDF;
+use Zip;
 
 class ProjectController extends Controller
 {
@@ -383,5 +385,40 @@ class ProjectController extends Controller
         $project->community_stakeholders = $project->community_stakeholders()->with('field_data')->get();
         $project->other_stakeholders = $project->other_stakeholders()->with('field_data')->get();
         return response()->json(['status'=>'Stakeholder Removed!', 'data'=>$project]);
+    }
+
+    public function generateCertificates(Request $request) {
+        $projectId = $request['projectId'];
+
+        $stakeholders = Project::find($projectId)->stakeholders()->with('field_data')->get();
+
+        if($projectId && count($stakeholders)) {
+            Storage::deleteDirectory('pdf/'.$projectId);
+            foreach($stakeholders as $stakeholder) {
+                $stakeholder_name = $stakeholder->field_data()->first()->stakeholder_field_value;
+                $data = [
+                    'name' => $stakeholder_name,
+                    'body' => 'This is the body of the certificate',
+                    'date' => 'DATE',
+                    'place' => 'PLACE'
+                ];
+
+                $pdf = PDF::loadView('certificate-template', ['data'=>$data])
+                    ->setPaper('a4', 'landscape')
+                    ->stream('download.pdf');
+                
+                Storage::disk('public')->put('pdf\\'.$projectId.'\\certificates\\'.$stakeholder_name.'.pdf', $pdf);
+            }
+
+            $zip_file = storage_path('app/public').'\\pdf\\'.$projectId.'\\download.zip';
+            Zip::create($zip_file);
+            $zip = Zip::open($zip_file);
+            $zip->add(storage_path('app/public').'\\pdf\\'.$projectId.'\\certificates', true);
+            $zip->close();
+            
+            return response()->download($zip_file);
+        } else {
+            return response()->json(['status'=>'Error', 'message'=>'Cannot find any stakeholders']);
+        }
     }
 }

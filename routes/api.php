@@ -27,4 +27,5 @@ Route::group(['middleware' => 'api'], function($api){
     Route::post('projects/{id}/stakeholder', 'ProjectController@addStakeholder');
     Route::put('projects/stakeholder/{id}', 'ProjectController@updateStakeholder');
     Route::delete('projects/stakeholder/{id}', 'ProjectController@removeStakeholder');
+    Route::post('projects/download-certificates', 'ProjectController@generateCertificates');
 });

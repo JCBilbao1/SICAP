@@ -1,3 +1,4 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 <div class="d-flex justify-content-center"><h3>JOSE RIZAL UNIVERSITY</h3></div>
@@ -29,18 +30,31 @@
 
 <div class="d-flex justify-content-around">
     <div style="float:left"> 
-            <h5>{{$data['left_name']}}</h5>
-            <h6>{{$data['left_position']}}</h6>
+            <h5>Dynamic Name</h5>
+            <h6>Dynamic Position</h6>
     </div>
 
     <div></div>
 
     <div style="float:right"> 
-        <h5>{{$data['right_name']}}</h5>
-        <h6>{{$data['right_position']}}</h6>
+        <h5>Dynamic Name</h5>
+        <h6>Dynamic Position</h6>
     </div>
 </div>
 
 <style>
 
+    html {
+        height: fit-content;
+        width: fit-content;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        width: 297mm;
+        height: 210mm;
+        margin: 0;
+        padding: 0;
+    }
 </style>

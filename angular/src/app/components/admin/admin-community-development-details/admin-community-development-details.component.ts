@@ -6,6 +6,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
+import { saveAs } from 'file-saver';
+
 @Component({
   selector: 'app-admin-community-development-details',
   templateUrl: './admin-community-development-details.component.html',
@@ -525,6 +527,18 @@ export class AdminCommunityDevelopmentDetailsComponent implements OnInit {
     } else if(type == 'edit') {
       this.stakeholder_for_edit.student_organizations = this.programs[program_key];
     }
+  }
+
+  downloadCertificates() {
+    this.showLoading('Generating Certificates', 'Please wait...');
+    this.API.download('projects/download-certificates/', {projectId : this.projectId}).subscribe(
+      (response:any) => {
+        Swal.close();
+        const blob = new Blob([response], {type: 'application/octet-stream'});
+        saveAs(blob, 'Project-'+this.projectId+'.zip');
+      },
+      error => console.error(error)
+    );
   }
 
   ngOnInit(): void {

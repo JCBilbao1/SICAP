@@ -30,4 +30,8 @@ export class APIService {
   delete(url){
     return this.http.delete(`${this.baseUrl}/${url}`);
   }
+
+  download(url,data){
+    return this.http.post(`${this.baseUrl}/${url}`, data, {responseType:'arraybuffer'});
+  }
 }

@@ -29,6 +29,7 @@
     "angular-datatables": "^9.0.2",
     "datatables.net": "^1.10.21",
     "datatables.net-dt": "^1.10.21",
+    "file-saver": "^2.0.2",
     "g": "^2.0.1",
     "html-to-image": "^0.1.1",
     "jquery": "^3.5.1",
