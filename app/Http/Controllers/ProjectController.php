@@ -421,7 +421,11 @@ class ProjectController extends Controller
             $zip_file = storage_path('app/public').'\\pdf\\'.$projectId.'\\download.zip';
             Zip::create($zip_file);
             $zip = Zip::open($zip_file);
-            $zip->add(storage_path('app/public').'\\pdf\\'.$projectId.'\\certificates', true);
+            $files = Storage::disk('public')->allFiles('pdf/'.$projectId.'/certificates');
+            $zip->setPath(storage_path('app/public').'\\pdf\\'.$projectId.'\\certificates');
+            foreach($files as $file) {
+                $zip->add($file);
+            }
             $zip->close();
             
             return response()->download($zip_file);
